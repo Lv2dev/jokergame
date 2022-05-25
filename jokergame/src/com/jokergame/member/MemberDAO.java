@@ -101,4 +101,103 @@ public class MemberDAO extends JDBConnect{
 			disconnectPstmt();
 		}
 	}
+	
+	//로그인
+	public synchronized boolean login(String id, String pw) throws SQLException {
+		try {
+			conn = dbConn.getConn();
+			query = new StringBuffer();
+
+			query.append("SELECT member_id, member_pw FROM member ");
+			query.append("WHERE member_id = ? AND member_pw = ?");
+
+			pstmt = conn.prepareStatement(query.toString());
+			
+			pstmt.setString(1, id);
+			pstmt.setString(2, pw);
+			
+			rs = pstmt.executeQuery();
+			int cnt = 0;
+			while (rs.next()) {
+				cnt++;
+			}
+
+			if (cnt == 1) {
+				return true;
+			}
+			return false;
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("로그인 에러");
+			return false;
+		} finally {
+			disconnectPstmt();
+		}
+	}
+	
+	//회원정보 MemberDTO로 가져오기
+	public synchronized MemberDTO getMember(String id) throws SQLException {
+		try {
+			conn = dbConn.getConn();
+			query = new StringBuffer();
+
+			query.append("SELECT * FROM member ");
+			query.append("WHERE member_id = ?");
+
+			pstmt = conn.prepareStatement(query.toString());
+			
+			pstmt.setString(1, id);
+			
+			rs = pstmt.executeQuery();
+			MemberDTO memberDTO = new MemberDTO();
+			int cnt = 0;
+			while (rs.next()) {
+				memberDTO.setMemberId(id);
+				memberDTO.setNickname(rs.getString("nickname"));
+				memberDTO.setJoinDay(null);
+				memberDTO.setExp(rs.getInt("exp"));
+				memberDTO.setWin(rs.getInt("win"));
+				memberDTO.setLose(rs.getInt("lose"));
+				memberDTO.setMatchCount(rs.getInt("match_count"));
+				cnt++;
+			}
+
+			if (cnt == 1) {
+				return memberDTO;
+			}
+			return null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("회원정보 가져오기 오류");
+			return null;
+		} finally {
+			disconnectPstmt();
+		}
+	}
+	
+	//회원의 상태 변경하기
+	public synchronized boolean setState(String id, int state) throws SQLException {
+		try {
+			conn = dbConn.getConn();
+			query = new StringBuffer();
+
+			query.append("UPDATE member ");
+			query.append("SET state = ? ");
+			query.append("WHERE member_id = ? ");
+
+			pstmt = conn.prepareStatement(query.toString());
+			
+			pstmt.setInt(1, state);
+			pstmt.setString(2, id);
+			
+			pstmt.executeUpdate();
+			return false;
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("회원 상태 변경 에러");
+			return false;
+		} finally {
+			disconnectPstmt();
+		}
+	}
 }

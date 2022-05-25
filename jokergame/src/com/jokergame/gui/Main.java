@@ -9,9 +9,11 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Point;
 import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableModel;
 
 import com.jokergame.member.MemberDAO;
 import com.jokergame.member.MemberDTO;
+import com.jokergame.room.RoomDAO;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -23,11 +25,17 @@ import javax.swing.JPasswordField;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 public class Main {
 	MemberDAO memberDAO = MemberDAO.getInstance();
+	MemberDTO memberDTO;
+	
+	RoomDAO roomDAO = RoomDAO.getInstance();
 
 	private JFrame mainFrame;
 	private JTextField txtId;
@@ -44,6 +52,8 @@ public class Main {
 	private JPasswordField txtInfoPw1;
 	private JPasswordField txtInfoPw2;
 	private JPasswordField txtInfoNowPw;
+	private JTable tblMain;
+	private DefaultTableModel dtmMain;
 
 	/**
 	 * Launch the application.
@@ -93,6 +103,129 @@ public class Main {
 		mainFrame.setBounds(100, 100, 1000, 800);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.getContentPane().setLayout(null);
+				
+						JPanel mainPanel = new JPanel();
+						
+						mainPanel.setBounds(0, 0, 982, 761);
+						mainFrame.getContentPane().add(mainPanel);
+						mainPanel.setLayout(null);
+						
+								JLabel lblMain = new JLabel("Lv10 \u3147\u3147\u3147\uB2D8 \uBC18\uAC11\uC2B5\uB2C8\uB2E4");
+								lblMain.setBounds(30, 30, 600, 70);
+								lblMain.setFont(new Font("≥ÿΩºLv2∞ÌµÒ Bold", Font.PLAIN, 40));
+								mainPanel.add(lblMain);
+								
+										JButton btnMainInfo = new JButton("\uD68C\uC6D0\uC815\uBCF4");
+										btnMainInfo.setBounds(730, 30, 140, 70);
+										btnMainInfo.setFont(new Font("≥ÿΩºLv2∞ÌµÒ Bold", Font.PLAIN, 30));
+										btnMainInfo.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
+										mainPanel.add(btnMainInfo);
+										
+												JButton btnMainRank = new JButton("\uB7AD\uD0B9");
+												btnMainRank.setBounds(580, 30, 140, 70);
+												btnMainRank.setFont(new Font("≥ÿΩºLv2∞ÌµÒ Bold", Font.PLAIN, 30));
+												btnMainRank.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
+												mainPanel.add(btnMainRank);
+												
+														JButton btnMainFriends = new JButton("\uCE5C\uAD6C");
+														btnMainFriends.setBounds(30, 660, 160, 70);
+														btnMainFriends.setFont(new Font("≥ÿΩºLv2∞ÌµÒ Bold", Font.PLAIN, 30));
+														btnMainFriends.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
+														mainPanel.add(btnMainFriends);
+														
+																JButton btnMainMatch = new JButton("\uB79C\uB364\uB9E4\uCE6D");
+																btnMainMatch.setBounds(220, 660, 160, 70);
+																btnMainMatch.setFont(new Font("≥ÿΩºLv2∞ÌµÒ Bold", Font.PLAIN, 30));
+																btnMainMatch.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
+																mainPanel.add(btnMainMatch);
+																
+																		JButton btnMainDel = new JButton("\uBC29\uC0AD\uC81C");
+																		btnMainDel.setBounds(410, 660, 160, 70);
+																		btnMainDel.setFont(new Font("≥ÿΩºLv2∞ÌµÒ Bold", Font.PLAIN, 30));
+																		btnMainDel.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
+																		mainPanel.add(btnMainDel);
+																		
+																				JButton btnMainJoin = new JButton("\uB4E4\uC5B4\uAC00\uAE30");
+																				btnMainJoin.setBounds(790, 660, 160, 70);
+																				btnMainJoin.setFont(new Font("≥ÿΩºLv2∞ÌµÒ Bold", Font.PLAIN, 30));
+																				btnMainJoin.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
+																				mainPanel.add(btnMainJoin);
+																				
+																						JButton btnMainNew = new JButton("\uBC29\uC0DD\uC131");
+																						btnMainNew.setBounds(600, 660, 160, 70);
+																						btnMainNew.setFont(new Font("≥ÿΩºLv2∞ÌµÒ Bold", Font.PLAIN, 30));
+																						btnMainNew.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
+																						mainPanel.add(btnMainNew);
+																						
+																						
+																								JButton btnMainRefresh = new JButton("#");
+																								btnMainRefresh.setBounds(880, 30, 70, 70);
+																								btnMainRefresh.setFont(new Font("≥ÿΩºLv2∞ÌµÒ Bold", Font.PLAIN, 30));
+																								btnMainRefresh.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
+																								mainPanel.add(btnMainRefresh);
+																								dtmMain = new DefaultTableModel(content, header) {
+																									public boolean isCellEditable(int rowIndex, int mCollIndex) {
+																										return false;
+																									}
+																								};
+																								tblMain = new JTable(dtmMain);
+																								tblMain.getTableHeader().setReorderingAllowed(false); //¿Ãµø∫“∞°
+																								tblMain.getTableHeader().setResizingAllowed(false); //≈©±‚¡∂¿˝∫“∞°
+																								tblMain.setFont(new Font("≥ÿΩºLv2∞ÌµÒ", Font.PLAIN, 20));
+																								
+																										JScrollPane mainScroll = new JScrollPane(tblMain);
+																										mainScroll.setBounds(30, 120, 920, 510);
+																										mainPanel.add(mainScroll);
+																										mainPanel.setVisible(false);
+																										
+																										
+																										
+		
+				JPanel loginPanel = new JPanel();
+				loginPanel.setFont(new Font("≥ÿΩºLv2∞ÌµÒ", Font.PLAIN, 20));
+				loginPanel.setBounds(0, 0, 982, 761);
+				mainFrame.getContentPane().add(loginPanel);
+				loginPanel.setLayout(null);
+				
+						JLabel lblTitle = new JLabel("<html><body style='text-align:center;'>Joker<br />GAME</body></html>");
+						lblTitle.setBounds(250, 80, 500, 250);
+						lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
+						lblTitle.setFont(new Font("≥ÿΩºLv1∞ÌµÒ Bold", Font.PLAIN, 90));
+						loginPanel.add(lblTitle);
+						
+								txtId = new JTextField();
+								txtId.setBounds(250, 380, 500, 50);
+								txtId.setFont(new Font("≥ÿΩºLv2∞ÌµÒ", Font.PLAIN, 20));
+								loginPanel.add(txtId);
+								txtId.setColumns(10);
+								
+										txtPw = new JTextField();
+										txtPw.setBounds(250, 460, 500, 50);
+										txtPw.setFont(new Font("≥ÿΩºLv2∞ÌµÒ", Font.PLAIN, 20));
+										txtPw.setColumns(10);
+										loginPanel.add(txtPw);
+										
+												JButton btnLoginFindPw = new JButton("\uBE44\uBC00\uBC88\uD638 \uCC3E\uAE30");
+												btnLoginFindPw.setBounds(250, 540, 200, 50);
+												btnLoginFindPw.setFont(new Font("≥ÿΩºLv2∞ÌµÒ", Font.PLAIN, 20));
+												btnLoginFindPw.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
+												loginPanel.add(btnLoginFindPw);
+												
+														JButton btnLoginProc = new JButton("\uB85C\uADF8\uC778");
+														btnLoginProc.setBounds(550, 540, 200, 50);
+														btnLoginProc.setFont(new Font("≥ÿΩºLv2∞ÌµÒ", Font.PLAIN, 20));
+														btnLoginProc.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
+														loginPanel.add(btnLoginProc);
+														
+																JButton btnLoginJoin = new JButton("\uD68C\uC6D0\uAC00\uC785");
+																btnLoginJoin.setBounds(400, 620, 200, 50);
+																btnLoginJoin.setFont(new Font("≥ÿΩºLv2∞ÌµÒ", Font.PLAIN, 20));
+																btnLoginJoin.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
+																loginPanel.add(btnLoginJoin);
+																loginPanel.setVisible(true); //√÷√ Ω√¿€ Ω√ ∑Œ±◊¿Œpanel∏∏ »∞º∫»≠
+																
+																		
+																		
 
 		JPanel joinPanel = new JPanel();
 		joinPanel.setBounds(0, 0, 982, 761);
@@ -415,112 +548,6 @@ public class Main {
 		rblRank.setBounds(350, 30, 600, 70);
 		rankPanel.add(rblRank);
 
-		JPanel mainPanel = new JPanel();
-		mainPanel.setBounds(0, 0, 982, 761);
-		mainFrame.getContentPane().add(mainPanel);
-		mainPanel.setLayout(null);
-
-		JLabel lblNewLabel = new JLabel("Lv10 \u3147\u3147\u3147\uB2D8 \uBC18\uAC11\uC2B5\uB2C8\uB2E4");
-		lblNewLabel.setBounds(30, 30, 600, 70);
-		lblNewLabel.setFont(new Font("≥ÿΩºLv2∞ÌµÒ Bold", Font.PLAIN, 40));
-		mainPanel.add(lblNewLabel);
-
-		JButton btnMainInfo = new JButton("\uD68C\uC6D0\uC815\uBCF4");
-		btnMainInfo.setBounds(730, 30, 140, 70);
-		btnMainInfo.setFont(new Font("≥ÿΩºLv2∞ÌµÒ Bold", Font.PLAIN, 30));
-		btnMainInfo.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
-		mainPanel.add(btnMainInfo);
-
-		JButton btnMainRank = new JButton("\uB7AD\uD0B9");
-		btnMainRank.setBounds(580, 30, 140, 70);
-		btnMainRank.setFont(new Font("≥ÿΩºLv2∞ÌµÒ Bold", Font.PLAIN, 30));
-		btnMainRank.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
-		mainPanel.add(btnMainRank);
-
-		JButton btnMainFriends = new JButton("\uCE5C\uAD6C");
-		btnMainFriends.setBounds(30, 660, 160, 70);
-		btnMainFriends.setFont(new Font("≥ÿΩºLv2∞ÌµÒ Bold", Font.PLAIN, 30));
-		btnMainFriends.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
-		mainPanel.add(btnMainFriends);
-
-		JButton btnMainMatch = new JButton("\uB79C\uB364\uB9E4\uCE6D");
-		btnMainMatch.setBounds(220, 660, 160, 70);
-		btnMainMatch.setFont(new Font("≥ÿΩºLv2∞ÌµÒ Bold", Font.PLAIN, 30));
-		btnMainMatch.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
-		mainPanel.add(btnMainMatch);
-
-		JButton btnMainDel = new JButton("\uBC29\uC0AD\uC81C");
-		btnMainDel.setBounds(410, 660, 160, 70);
-		btnMainDel.setFont(new Font("≥ÿΩºLv2∞ÌµÒ Bold", Font.PLAIN, 30));
-		btnMainDel.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
-		mainPanel.add(btnMainDel);
-
-		JButton btnMainJoin = new JButton("\uB4E4\uC5B4\uAC00\uAE30");
-		btnMainJoin.setBounds(790, 660, 160, 70);
-		btnMainJoin.setFont(new Font("≥ÿΩºLv2∞ÌµÒ Bold", Font.PLAIN, 30));
-		btnMainJoin.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
-		mainPanel.add(btnMainJoin);
-
-		JButton btnMainNew = new JButton("\uBC29\uC0DD\uC131");
-		btnMainNew.setBounds(600, 660, 160, 70);
-		btnMainNew.setFont(new Font("≥ÿΩºLv2∞ÌµÒ Bold", Font.PLAIN, 30));
-		btnMainNew.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
-		mainPanel.add(btnMainNew);
-
-		JButton btnMainRefresh = new JButton("#");
-		btnMainRefresh.setBounds(880, 30, 70, 70);
-		btnMainRefresh.setFont(new Font("≥ÿΩºLv2∞ÌµÒ Bold", Font.PLAIN, 30));
-		btnMainRefresh.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
-		mainPanel.add(btnMainRefresh);
-		JTable tblMain = new JTable(content, header);
-		tblMain.setFont(new Font("≥ÿΩºLv2∞ÌµÒ", Font.PLAIN, 20));
-
-		JScrollPane scrollPane = new JScrollPane(tblMain);
-		scrollPane.setBounds(30, 120, 920, 510);
-		mainPanel.add(scrollPane);
-
-		JPanel loginPanel = new JPanel();
-		loginPanel.setFont(new Font("≥ÿΩºLv2∞ÌµÒ", Font.PLAIN, 20));
-		loginPanel.setBounds(0, 0, 982, 761);
-		mainFrame.getContentPane().add(loginPanel);
-		loginPanel.setLayout(null);
-
-		JLabel lblTitle = new JLabel("<html><body style='text-align:center;'>Joker<br />GAME</body></html>");
-		lblTitle.setBounds(250, 80, 500, 250);
-		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTitle.setFont(new Font("≥ÿΩºLv1∞ÌµÒ Bold", Font.PLAIN, 90));
-		loginPanel.add(lblTitle);
-
-		txtId = new JTextField();
-		txtId.setBounds(250, 380, 500, 50);
-		txtId.setFont(new Font("≥ÿΩºLv2∞ÌµÒ", Font.PLAIN, 20));
-		loginPanel.add(txtId);
-		txtId.setColumns(10);
-
-		txtPw = new JTextField();
-		txtPw.setBounds(250, 460, 500, 50);
-		txtPw.setFont(new Font("≥ÿΩºLv2∞ÌµÒ", Font.PLAIN, 20));
-		txtPw.setColumns(10);
-		loginPanel.add(txtPw);
-
-		JButton btnLoginFindPw = new JButton("\uBE44\uBC00\uBC88\uD638 \uCC3E\uAE30");
-		btnLoginFindPw.setBounds(250, 540, 200, 50);
-		btnLoginFindPw.setFont(new Font("≥ÿΩºLv2∞ÌµÒ", Font.PLAIN, 20));
-		btnLoginFindPw.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
-		loginPanel.add(btnLoginFindPw);
-
-		JButton btnLoginProc = new JButton("\uB85C\uADF8\uC778");
-		btnLoginProc.setBounds(550, 540, 200, 50);
-		btnLoginProc.setFont(new Font("≥ÿΩºLv2∞ÌµÒ", Font.PLAIN, 20));
-		btnLoginProc.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
-		loginPanel.add(btnLoginProc);
-
-		JButton btnLoginJoin = new JButton("\uD68C\uC6D0\uAC00\uC785");
-		btnLoginJoin.setBounds(400, 620, 200, 50);
-		btnLoginJoin.setFont(new Font("≥ÿΩºLv2∞ÌµÒ", Font.PLAIN, 20));
-		btnLoginJoin.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
-		loginPanel.add(btnLoginJoin);
-
 		JPanel findPwPanel = new JPanel();
 		findPwPanel.setBounds(0, 0, 982, 761);
 		mainFrame.getContentPane().add(findPwPanel);
@@ -575,17 +602,70 @@ public class Main {
 		findPwPanel.add(btnFindPwProc);
 
 		joinPanel.setVisible(false);
-		loginPanel.setVisible(true); //√÷√ Ω√¿€ Ω√ ∑Œ±◊¿Œpanel∏∏ »∞º∫»≠
 		findPwPanel.setVisible(false);
-		mainPanel.setVisible(false);
 		friendPanel.setVisible(false);
 		infoPanel.setVisible(false);
 		rankPanel.setVisible(false);
 		RoomPanel.setVisible(false);
-
+		
+		
 		
 		// events
-
+		
+		
+		//∏ﬁ¿Œ ∆‰¿Ã¡ˆ
+		
+		
+		//∏ﬁ¿Œ ∆‰¿Ã¡ˆ∞° ∫∏ø©¡˙ ∂ß
+		mainPanel.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentShown(ComponentEvent e) {
+				//mainPanel √ ±‚»≠
+				//lblMain √ ±‚»≠
+				StringBuffer msg = new StringBuffer();
+				msg.append("Lv" + memberDTO.getExp() / 100);
+				msg.append(" ");
+				msg.append(memberDTO.getNickname() + "¥‘ π›∞©Ω¿¥œ¥Ÿ");
+				lblMain.setText(msg.toString());
+				
+				//tblMain √ ±‚»≠
+				//«ˆ¿Á ¥Î±‚¡ﬂ¿Œ πÊ ∏Ò∑œ ∞°¡ÆøÕº≠ √‚∑¬«œ±‚
+				String[][] rooms;
+				try {
+					ArrayList<ArrayList<String>> list = roomDAO.getRooms(0);
+					//list∏¶ 2¬˜ø¯ πËø≠∑Œ ∫Ø»Ø
+					
+					if(list == null) {
+						rooms = new String[0][0];
+					}else {
+						rooms = new String[list.size()][list.get(0).size()];
+						int i = 0;
+						int j = 0;
+						for(ArrayList<String> a : list) {
+							for(String b : a) {
+								rooms[i][j++] = b;
+							}
+							i++;
+						}
+					}
+					//tblMainø° ∞™ √ﬂ∞°
+					dtmMain = (DefaultTableModel)tblMain.getModel();
+					dtmMain.setNumRows(0);
+					dtmMain = new DefaultTableModel(rooms, header){ //ºˆ¡§ ∫“∞°¥…«— ≈◊¿Ã∫Ì
+						public boolean isCellEditable(int rowIndex, int mCollIndex) {
+							return false;
+						}
+					};
+					tblMain.setModel(dtmMain);
+					
+					
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+			}
+		});
 		
 		// ∑Œ±◊¿Œ ∆‰¿Ã¡ˆ
 		
@@ -595,6 +675,28 @@ public class Main {
 			public void mouseClicked(MouseEvent e) {
 				loginPanel.setVisible(false); //∑Œ±◊¿Œ ∆‰¿Ã¡ˆ ∫Ò»∞º∫»≠
 				joinPanel.setVisible(true); //»∏ø¯∞°¿‘ ∆‰¿Ã¡ˆ »∞º∫»≠
+			}
+		});
+		
+		// ∑Œ±◊¿Œ πˆ∆∞ ≈¨∏Ø
+		btnLoginProc.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				String id = txtId.getText();
+				String pw = txtPw.getText();
+				try {
+					if(memberDAO.login(id, pw)) {
+						//idøÕ pw∫Ò±≥ ∞·∞˙∞° ∞∞¿∏∏È ∏ﬁ¿Œ ∆‰¿Ã¡ˆ∑Œ
+						loginPanel.setVisible(false); //∑Œ±◊¿Œ∆‰¿Ã¡ˆ ∫Ò»∞º∫»≠
+						memberDTO = memberDAO.getMember(id); //∏‚πˆ ¡§∫∏ ¿˙¿Â
+						memberDAO.setState(id, 1); //∏‚πˆ ªÛ≈¬∏¶ 1(∑Œ±◊¿Œ)¿∏∑Œ ∫Ø∞Ê
+						
+						mainPanel.setVisible(true); //∏ﬁ¿Œ∆‰¿Ã¡ˆ »∞º∫»≠
+					}
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 
@@ -646,14 +748,14 @@ public class Main {
 			public void mouseClicked(MouseEvent e) {
 				// ∫Òπ–π¯»£ ∞∞¿∫¡ˆ √º≈©
 				if (txtJoinPwChk.getText().equals(txtJoinPw.getText())) {
-					MemberDTO memberDTO = new MemberDTO(); // MemberDTO ∞¥√º ª˝º∫ π◊ √ ±‚»≠
+					MemberDTO mDTO = new MemberDTO(); // MemberDTO ∞¥√º ª˝º∫ π◊ √ ±‚»≠
 					memberDTO.setMemberId(txtJoinId.getText());
 					memberDTO.setMemberPw(txtJoinPw.getText());
 					memberDTO.setNickname(txtJoinNick.getText());
 					memberDTO.setAnswer(txtJoinA.getText());
 					memberDTO.setQuestion(txtJoinQ.getText());
 					try {
-						if (memberDAO.join(memberDTO)) {
+						if (memberDAO.join(mDTO)) {
 							txtJoinId.setEnabled(true);// æ∆¿Ãµ ≈ÿΩ∫∆Æ« µÂ »∞º∫»≠
 							btnJoinIdChk.setEnabled(true);// ¡ﬂ∫π√º≈© πˆ∆∞ »∞º∫»≠
 							btnJoin.setEnabled(false);// »∏ø¯∞°¿‘ πˆ∆∞ »∞º∫»≠
