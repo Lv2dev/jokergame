@@ -2,6 +2,7 @@ package com.jokergame.member;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -198,6 +199,70 @@ public class MemberDAO extends JDBConnect{
 			return false;
 		} finally {
 			disconnectPstmt();
+		}
+	}
+	
+	//비밀번호 수정하기
+	public synchronized boolean updatePw(String id, String pw) throws SQLException {
+		try {
+			conn = dbConn.getConn();
+			query = new StringBuffer();
+
+			query.append("UPDATE member ");
+			query.append("SET member_pw = ? ");
+			query.append("WHERE member_id = ? ");
+
+			pstmt = conn.prepareStatement(query.toString());
+			
+			pstmt.setString(1, pw);
+			pstmt.setString(2, id);
+			
+			pstmt.executeUpdate();
+			return false;
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("비밀번호 변경 에러" + e.getMessage());
+			return false;
+		} finally {
+			disconnectPstmt();
+		}
+	}
+	
+	//랭킹 top 100 가져오기
+	public synchronized ArrayList<MemberDTO> getRanker(){
+		try {
+			conn = dbConn.getConn();
+			query = new StringBuffer();
+			
+			query.append("SELECT * FROM member order by exp limit 100");
+			
+			pstmt = conn.prepareStatement(query.toString());
+			
+			rs = pstmt.executeQuery();
+			
+			ArrayList<MemberDTO> list = new ArrayList<MemberDTO>();
+			while(rs.next()) {
+				MemberDTO dto = new MemberDTO();
+				dto.setMemberId(rs.getString("member_id"));
+				dto.setExp(rs.getInt("exp"));
+				dto.setNickname(rs.getString("nickname"));
+				dto.setWin(rs.getInt("win"));
+				dto.setLose(rs.getInt("lose"));
+				list.add(dto);
+			}
+			return list;
+		}catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			System.out.println("랭커 가져오기 오류 " + e.getMessage());
+			return null;
+		}finally {
+			try {
+				disconnectPstmt();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 }

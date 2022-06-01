@@ -14,6 +14,7 @@ import javax.swing.table.DefaultTableModel;
 import com.jokergame.member.MemberDAO;
 import com.jokergame.member.MemberDTO;
 import com.jokergame.room.RoomDAO;
+import com.jokergame.room.RoomDTO;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -36,6 +37,7 @@ public class Main {
 	MemberDTO memberDTO;
 	
 	RoomDAO roomDAO = RoomDAO.getInstance();
+	RoomDTO roomDTO;
 
 	private JFrame mainFrame;
 	private JTextField txtId;
@@ -54,6 +56,11 @@ public class Main {
 	private JPasswordField txtInfoNowPw;
 	private JTable tblMain;
 	private DefaultTableModel dtmMain;
+	private JTable tblRoom;
+	private DefaultTableModel dtmRoom;
+	private JTable tblRank;
+	private DefaultTableModel dtmRank;
+	private JTextField txtRoomName;
 
 	/**
 	 * Launch the application.
@@ -103,80 +110,187 @@ public class Main {
 		mainFrame.setBounds(100, 100, 1000, 800);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.getContentPane().setLayout(null);
-				
-						JPanel mainPanel = new JPanel();
-						
-						mainPanel.setBounds(0, 0, 982, 761);
-						mainFrame.getContentPane().add(mainPanel);
-						mainPanel.setLayout(null);
-						
-								JLabel lblMain = new JLabel("Lv10 \u3147\u3147\u3147\uB2D8 \uBC18\uAC11\uC2B5\uB2C8\uB2E4");
-								lblMain.setBounds(30, 30, 600, 70);
-								lblMain.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 40));
-								mainPanel.add(lblMain);
 								
-										JButton btnMainInfo = new JButton("\uD68C\uC6D0\uC815\uBCF4");
-										btnMainInfo.setBounds(730, 30, 140, 70);
-										btnMainInfo.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
-										btnMainInfo.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
-										mainPanel.add(btnMainInfo);
+										JPanel mainPanel = new JPanel();
 										
-												JButton btnMainRank = new JButton("\uB7AD\uD0B9");
-												btnMainRank.setBounds(580, 30, 140, 70);
-												btnMainRank.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
-												btnMainRank.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
-												mainPanel.add(btnMainRank);
+										mainPanel.setBounds(0, 0, 982, 761);
+										mainFrame.getContentPane().add(mainPanel);
+										mainPanel.setLayout(null);
+										
+												JLabel lblMain = new JLabel("Lv10 \u3147\u3147\u3147\uB2D8 \uBC18\uAC11\uC2B5\uB2C8\uB2E4");
+												lblMain.setBounds(30, 30, 600, 70);
+												lblMain.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 40));
+												mainPanel.add(lblMain);
 												
-														JButton btnMainFriends = new JButton("\uCE5C\uAD6C");
-														btnMainFriends.setBounds(30, 660, 160, 70);
-														btnMainFriends.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
-														btnMainFriends.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
-														mainPanel.add(btnMainFriends);
+														JButton btnMainInfo = new JButton("\uD68C\uC6D0\uC815\uBCF4");
 														
-																JButton btnMainMatch = new JButton("\uB79C\uB364\uB9E4\uCE6D");
-																btnMainMatch.setBounds(220, 660, 160, 70);
-																btnMainMatch.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
-																btnMainMatch.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
-																mainPanel.add(btnMainMatch);
+														btnMainInfo.setBounds(730, 30, 140, 70);
+														btnMainInfo.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
+														btnMainInfo.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
+														mainPanel.add(btnMainInfo);
+														
+																JButton btnMainRank = new JButton("\uB7AD\uD0B9");
 																
-																		JButton btnMainDel = new JButton("\uBC29\uC0AD\uC81C");
-																		btnMainDel.setBounds(410, 660, 160, 70);
-																		btnMainDel.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
-																		btnMainDel.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
-																		mainPanel.add(btnMainDel);
+																btnMainRank.setBounds(580, 30, 140, 70);
+																btnMainRank.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
+																btnMainRank.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
+																mainPanel.add(btnMainRank);
+																
+																		JButton btnMainFriends = new JButton("\uCE5C\uAD6C");
 																		
-																				JButton btnMainJoin = new JButton("\uB4E4\uC5B4\uAC00\uAE30");
-																				btnMainJoin.setBounds(790, 660, 160, 70);
-																				btnMainJoin.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
-																				btnMainJoin.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
-																				mainPanel.add(btnMainJoin);
+																		btnMainFriends.setBounds(30, 660, 160, 70);
+																		btnMainFriends.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
+																		btnMainFriends.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
+																		mainPanel.add(btnMainFriends);
+																		
+																				JButton btnMainMatch = new JButton("\uB79C\uB364\uB9E4\uCE6D");
 																				
-																						JButton btnMainNew = new JButton("\uBC29\uC0DD\uC131");
-																						btnMainNew.setBounds(600, 660, 160, 70);
-																						btnMainNew.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
-																						btnMainNew.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
-																						mainPanel.add(btnMainNew);
+																				btnMainMatch.setBounds(220, 660, 160, 70);
+																				btnMainMatch.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
+																				btnMainMatch.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
+																				mainPanel.add(btnMainMatch);
+																				
+																						JButton btnMainDel = new JButton("\uBC29\uC0AD\uC81C");
+																						btnMainDel.setBounds(410, 660, 160, 70);
+																						btnMainDel.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
+																						btnMainDel.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
+																						mainPanel.add(btnMainDel);
 																						
+																								JButton btnMainJoin = new JButton("\uB4E4\uC5B4\uAC00\uAE30");
+																								
+																								btnMainJoin.setBounds(790, 660, 160, 70);
+																								btnMainJoin.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
+																								btnMainJoin.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
+																								mainPanel.add(btnMainJoin);
+																								
+																										JButton btnMainNew = new JButton("\uBC29\uC0DD\uC131");
+																										
+																										
+																										btnMainNew.setBounds(600, 660, 160, 70);
+																										btnMainNew.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
+																										btnMainNew.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
+																										mainPanel.add(btnMainNew);
+																										
+																										
+																												JButton btnMainRefresh = new JButton("#");
+																												
+																												btnMainRefresh.setBounds(880, 30, 70, 70);
+																												btnMainRefresh.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
+																												btnMainRefresh.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
+																												mainPanel.add(btnMainRefresh);
+																												tblMain = new JTable(dtmMain);
+																												tblMain.getTableHeader().setReorderingAllowed(false); //ÀÌµ¿ºÒ°¡
+																												tblMain.getTableHeader().setResizingAllowed(false); //Å©±âÁ¶ÀýºÒ°¡
+																												tblMain.setFont(new Font("³Ø½¼Lv2°íµñ", Font.PLAIN, 20));
+																												
+																														JScrollPane mainScroll = new JScrollPane(tblMain);
+																														mainScroll.setBounds(30, 120, 920, 510);
+																														mainPanel.add(mainScroll);
+																														mainPanel.setVisible(false);
+																														
+																														
+																														
+																														
+						
+								JPanel infoPanel = new JPanel();
+								
+								infoPanel.setLayout(null);
+								infoPanel.setBounds(0, 0, 982, 761);
+								mainFrame.getContentPane().add(infoPanel);
+								
+										JButton btnInfoBack = new JButton("\u25C1");
+										
+										btnInfoBack.setFont(new Font("³Ø½¼Lv2°íµñ", Font.PLAIN, 20));
+										btnInfoBack.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
+										btnInfoBack.setBounds(30, 30, 100, 70);
+										infoPanel.add(btnInfoBack);
+										
+												JLabel rblInfo = new JLabel("\uC815\uBCF4\uAD00\uB9AC");
+												rblInfo.setHorizontalAlignment(SwingConstants.RIGHT);
+												rblInfo.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 40));
+												rblInfo.setBounds(350, 30, 600, 70);
+												infoPanel.add(rblInfo);
+												
+														JLabel lblInfoNickname1 = new JLabel("\uB2C9\uB124\uC784");
+														lblInfoNickname1.setHorizontalAlignment(SwingConstants.LEFT);
+														lblInfoNickname1.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
+														lblInfoNickname1.setBounds(30, 120, 200, 50);
+														infoPanel.add(lblInfoNickname1);
+														
+																JLabel lblInfoNowPw = new JLabel("\uD604\uC7AC \uBE44\uBC00\uBC88\uD638");
+																lblInfoNowPw.setHorizontalAlignment(SwingConstants.LEFT);
+																lblInfoNowPw.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
+																lblInfoNowPw.setBounds(30, 570, 200, 50);
+																infoPanel.add(lblInfoNowPw);
+																
+																		JLabel lblInfoPw2 = new JLabel("\uBCC0\uACBD\uBE44\uBC00\uBC88\uD638 \uD655\uC778");
+																		lblInfoPw2.setHorizontalAlignment(SwingConstants.LEFT);
+																		lblInfoPw2.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
+																		lblInfoPw2.setBounds(30, 480, 250, 50);
+																		infoPanel.add(lblInfoPw2);
+																		
+																				JLabel lblInfoId1 = new JLabel("\uC544\uC774\uB514");
+																				lblInfoId1.setHorizontalAlignment(SwingConstants.LEFT);
+																				lblInfoId1.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
+																				lblInfoId1.setBounds(30, 210, 200, 50);
+																				infoPanel.add(lblInfoId1);
+																				
+																						JLabel lblInfoPw1 = new JLabel("\uBCC0\uACBD \uBE44\uBC00\uBC88\uD638");
+																						lblInfoPw1.setHorizontalAlignment(SwingConstants.LEFT);
+																						lblInfoPw1.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
+																						lblInfoPw1.setBounds(30, 390, 200, 50);
+																						infoPanel.add(lblInfoPw1);
 																						
-																								JButton btnMainRefresh = new JButton("#");
-																								btnMainRefresh.setBounds(880, 30, 70, 70);
-																								btnMainRefresh.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
-																								btnMainRefresh.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
-																								mainPanel.add(btnMainRefresh);
+																								JLabel lblInfoLog1 = new JLabel("\uC804\uC801");
+																								lblInfoLog1.setHorizontalAlignment(SwingConstants.LEFT);
+																								lblInfoLog1.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
+																								lblInfoLog1.setBounds(30, 300, 200, 50);
+																								infoPanel.add(lblInfoLog1);
+																								
+																										JLabel lblInfoNickname2 = new JLabel("\uB2C9\uB124\uC784");
+																										lblInfoNickname2.setHorizontalAlignment(SwingConstants.LEFT);
+																										lblInfoNickname2.setFont(new Font("³Ø½¼Lv2°íµñ Light", Font.PLAIN, 30));
+																										lblInfoNickname2.setBounds(300, 120, 200, 50);
+																										infoPanel.add(lblInfoNickname2);
+																										
+																												JLabel lblInfoId2 = new JLabel("\uC544\uC774\uB514");
+																												lblInfoId2.setHorizontalAlignment(SwingConstants.LEFT);
+																												lblInfoId2.setFont(new Font("³Ø½¼Lv2°íµñ Light", Font.PLAIN, 30));
+																												lblInfoId2.setBounds(300, 210, 200, 50);
+																												infoPanel.add(lblInfoId2);
+																												
+																														JLabel lblInfoLog2 = new JLabel("\uC2B9\uD328");
+																														lblInfoLog2.setHorizontalAlignment(SwingConstants.LEFT);
+																														lblInfoLog2.setFont(new Font("³Ø½¼Lv2°íµñ Light", Font.PLAIN, 30));
+																														lblInfoLog2.setBounds(300, 300, 200, 50);
+																														infoPanel.add(lblInfoLog2);
+																														
+																																txtInfoPw1 = new JPasswordField();
+																																txtInfoPw1.setBounds(300, 390, 400, 50);
+																																infoPanel.add(txtInfoPw1);
+																																
+																																		txtInfoPw2 = new JPasswordField();
+																																		txtInfoPw2.setBounds(300, 480, 400, 50);
+																																		infoPanel.add(txtInfoPw2);
+																																		
+																																				txtInfoNowPw = new JPasswordField();
+																																				txtInfoNowPw.setBounds(300, 570, 400, 50);
+																																				infoPanel.add(txtInfoNowPw);
+																																				
+																																						JButton btnInfoChange = new JButton("\uC218\uC815");
+																																						
+																																						btnInfoChange.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
+																																						btnInfoChange.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
+																																						btnInfoChange.setBounds(790, 670, 160, 70);
+																																						infoPanel.add(btnInfoChange);
+																								
+																																						
+																																						
 																								dtmMain = new DefaultTableModel(content, header) {
 																									public boolean isCellEditable(int rowIndex, int mCollIndex) {
 																										return false;
 																									}
 																								};
-																								tblMain = new JTable(dtmMain);
-																								tblMain.getTableHeader().setReorderingAllowed(false); //ÀÌµ¿ºÒ°¡
-																								tblMain.getTableHeader().setResizingAllowed(false); //Å©±âÁ¶ÀýºÒ°¡
-																								tblMain.setFont(new Font("³Ø½¼Lv2°íµñ", Font.PLAIN, 20));
-																								
-																										JScrollPane mainScroll = new JScrollPane(tblMain);
-																										mainScroll.setBounds(30, 120, 920, 510);
-																										mainPanel.add(mainScroll);
-																										mainPanel.setVisible(false);
 																										
 																										
 																										
@@ -330,52 +444,70 @@ public class Main {
 		lblJoinIdChk.setBounds(350, 390, 320, 50);
 		joinPanel.add(lblJoinIdChk);
 
-		JPanel RoomPanel = new JPanel();
-		RoomPanel.setLayout(null);
-		RoomPanel.setBounds(0, 0, 982, 761);
-		mainFrame.getContentPane().add(RoomPanel);
+		JPanel roomPanel = new JPanel();
+		
+		roomPanel.setLayout(null);
+		roomPanel.setBounds(0, 0, 982, 761);
+		mainFrame.getContentPane().add(roomPanel);
 
-		JButton btnRoomPw = new JButton("\uBE44\uBC88\uC124\uC815");
-		btnRoomPw.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
-		btnRoomPw.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
-		btnRoomPw.setBounds(220, 660, 160, 70);
-		RoomPanel.add(btnRoomPw);
+		JButton btnRoomName = new JButton("\uC774\uB984\uBCC0\uACBD");
+		btnRoomName.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
+		btnRoomName.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
+		btnRoomName.setBounds(30, 660, 160, 70);
+		roomPanel.add(btnRoomName);
 
 		JButton btnRoomKick = new JButton("\uAC15\uD1F4");
 		btnRoomKick.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
 		btnRoomKick.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
 		btnRoomKick.setBounds(410, 660, 160, 70);
-		RoomPanel.add(btnRoomKick);
+		roomPanel.add(btnRoomKick);
 
 		JButton btnRoomReady = new JButton("\uC900\uBE44\uC644\uB8CC");
 		btnRoomReady.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
 		btnRoomReady.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
 		btnRoomReady.setBounds(790, 660, 160, 70);
-		RoomPanel.add(btnRoomReady);
+		roomPanel.add(btnRoomReady);
 
 		JButton btnRoomBet = new JButton("\uBC30\uD305");
 		btnRoomBet.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
 		btnRoomBet.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
 		btnRoomBet.setBounds(600, 660, 160, 70);
-		RoomPanel.add(btnRoomBet);
-		JTable tblRoom = new JTable(roomContent, roomHeader);
+		roomPanel.add(btnRoomBet);
+		dtmRoom = new DefaultTableModel(roomContent, roomHeader){ //¼öÁ¤ºÒ°¡´ÉÇÏ°Ô º¯°æ
+			public boolean isCellEditable(int rowIndex, int mCollIndex) {
+				return false;
+			}
+		};
+		tblRoom = new JTable(dtmRoom);
 		tblRoom.setFont(new Font("³Ø½¼Lv2°íµñ", Font.PLAIN, 20));
 
 		JScrollPane roomScroll = new JScrollPane(tblRoom);
 		roomScroll.setBounds(30, 120, 920, 510);
-		RoomPanel.add(roomScroll);
+		roomPanel.add(roomScroll);
 
 		JButton btnRoomBack = new JButton("\u25C1");
+		
 		btnRoomBack.setFont(new Font("³Ø½¼Lv2°íµñ", Font.PLAIN, 20));
 		btnRoomBack.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
 		btnRoomBack.setBounds(30, 30, 100, 70);
-		RoomPanel.add(btnRoomBack);
+		roomPanel.add(btnRoomBack);
 
 		JLabel rblRoom = new JLabel("\uB300\uAE30\uC2E4");
 		rblRoom.setHorizontalAlignment(SwingConstants.RIGHT);
 		rblRoom.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 40));
 		rblRoom.setBounds(350, 30, 600, 70);
-		RoomPanel.add(rblRoom);
+		roomPanel.add(rblRoom);
+		
+		txtRoomName = new JTextField();
+		txtRoomName.setBounds(300, 50, 116, 21);
+		roomPanel.add(txtRoomName);
+		txtRoomName.setColumns(10);
+		
+		JButton btnRoomName_1 = new JButton("\uC0C8\uB85C\uACE0\uCE68");
+		btnRoomName_1.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
+		btnRoomName_1.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
+		btnRoomName_1.setBounds(220, 660, 160, 70);
+		roomPanel.add(btnRoomName_1);
 
 		JPanel friendPanel = new JPanel();
 		friendPanel.setLayout(null);
@@ -436,96 +568,8 @@ public class Main {
 		rblInfo_1.setBounds(350, 30, 600, 70);
 		friendPanel.add(rblInfo_1);
 
-		JPanel infoPanel = new JPanel();
-		infoPanel.setLayout(null);
-		infoPanel.setBounds(0, 0, 982, 761);
-		mainFrame.getContentPane().add(infoPanel);
-
-		JButton btnInfoBack = new JButton("\u25C1");
-		btnInfoBack.setFont(new Font("³Ø½¼Lv2°íµñ", Font.PLAIN, 20));
-		btnInfoBack.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
-		btnInfoBack.setBounds(30, 30, 100, 70);
-		infoPanel.add(btnInfoBack);
-
-		JLabel rblInfo = new JLabel("\uC815\uBCF4\uAD00\uB9AC");
-		rblInfo.setHorizontalAlignment(SwingConstants.RIGHT);
-		rblInfo.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 40));
-		rblInfo.setBounds(350, 30, 600, 70);
-		infoPanel.add(rblInfo);
-
-		JLabel lblInfoNickname1 = new JLabel("\uB2C9\uB124\uC784");
-		lblInfoNickname1.setHorizontalAlignment(SwingConstants.LEFT);
-		lblInfoNickname1.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
-		lblInfoNickname1.setBounds(30, 120, 200, 50);
-		infoPanel.add(lblInfoNickname1);
-
-		JLabel lblInfoNowPw = new JLabel("\uD604\uC7AC \uBE44\uBC00\uBC88\uD638");
-		lblInfoNowPw.setHorizontalAlignment(SwingConstants.LEFT);
-		lblInfoNowPw.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
-		lblInfoNowPw.setBounds(30, 570, 200, 50);
-		infoPanel.add(lblInfoNowPw);
-
-		JLabel lblInfoPw2 = new JLabel("\uBCC0\uACBD\uBE44\uBC00\uBC88\uD638 \uD655\uC778");
-		lblInfoPw2.setHorizontalAlignment(SwingConstants.LEFT);
-		lblInfoPw2.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
-		lblInfoPw2.setBounds(30, 480, 250, 50);
-		infoPanel.add(lblInfoPw2);
-
-		JLabel lblInfoId1 = new JLabel("\uC544\uC774\uB514");
-		lblInfoId1.setHorizontalAlignment(SwingConstants.LEFT);
-		lblInfoId1.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
-		lblInfoId1.setBounds(30, 210, 200, 50);
-		infoPanel.add(lblInfoId1);
-
-		JLabel lblInfoPw1 = new JLabel("\uBCC0\uACBD \uBE44\uBC00\uBC88\uD638");
-		lblInfoPw1.setHorizontalAlignment(SwingConstants.LEFT);
-		lblInfoPw1.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
-		lblInfoPw1.setBounds(30, 390, 200, 50);
-		infoPanel.add(lblInfoPw1);
-
-		JLabel lblInfoLog1 = new JLabel("\uC804\uC801");
-		lblInfoLog1.setHorizontalAlignment(SwingConstants.LEFT);
-		lblInfoLog1.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
-		lblInfoLog1.setBounds(30, 300, 200, 50);
-		infoPanel.add(lblInfoLog1);
-
-		JLabel lblInfoNickname2 = new JLabel("\uB2C9\uB124\uC784");
-		lblInfoNickname2.setHorizontalAlignment(SwingConstants.LEFT);
-		lblInfoNickname2.setFont(new Font("³Ø½¼Lv2°íµñ Light", Font.PLAIN, 30));
-		lblInfoNickname2.setBounds(300, 120, 200, 50);
-		infoPanel.add(lblInfoNickname2);
-
-		JLabel lblInfoId2 = new JLabel("\uC544\uC774\uB514");
-		lblInfoId2.setHorizontalAlignment(SwingConstants.LEFT);
-		lblInfoId2.setFont(new Font("³Ø½¼Lv2°íµñ Light", Font.PLAIN, 30));
-		lblInfoId2.setBounds(300, 210, 200, 50);
-		infoPanel.add(lblInfoId2);
-
-		JLabel lblInfoLog2 = new JLabel("\uC2B9\uD328");
-		lblInfoLog2.setHorizontalAlignment(SwingConstants.LEFT);
-		lblInfoLog2.setFont(new Font("³Ø½¼Lv2°íµñ Light", Font.PLAIN, 30));
-		lblInfoLog2.setBounds(300, 300, 200, 50);
-		infoPanel.add(lblInfoLog2);
-
-		txtInfoPw1 = new JPasswordField();
-		txtInfoPw1.setBounds(300, 390, 400, 50);
-		infoPanel.add(txtInfoPw1);
-
-		txtInfoPw2 = new JPasswordField();
-		txtInfoPw2.setBounds(300, 480, 400, 50);
-		infoPanel.add(txtInfoPw2);
-
-		txtInfoNowPw = new JPasswordField();
-		txtInfoNowPw.setBounds(300, 570, 400, 50);
-		infoPanel.add(txtInfoNowPw);
-
-		JButton btnInfoChange = new JButton("\uC218\uC815");
-		btnInfoChange.setFont(new Font("³Ø½¼Lv2°íµñ Bold", Font.PLAIN, 30));
-		btnInfoChange.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
-		btnInfoChange.setBounds(790, 670, 160, 70);
-		infoPanel.add(btnInfoChange);
-
 		JPanel rankPanel = new JPanel();
+		
 		rankPanel.setBounds(0, 0, 982, 761);
 		mainFrame.getContentPane().add(rankPanel);
 		rankPanel.setLayout(null);
@@ -535,7 +579,16 @@ public class Main {
 		btnRankBack.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
 		btnRankBack.setBounds(30, 30, 100, 70);
 		rankPanel.add(btnRankBack);
-		JTable tblRank = new JTable(rankContent, rankHeader);
+		dtmRank = new DefaultTableModel(rankContent, rankHeader) {
+			public boolean isCellEditable(int rowIndex, int mCollIndex) {
+			return false;
+			}
+			};
+		tblRank = new JTable(dtmRank);
+		tblRank.getTableHeader().setReorderingAllowed(false); //ÀÌµ¿ºÒ°¡
+		tblRank.getTableHeader().setResizingAllowed(false); //Å©±âÁ¶ÀýºÒ°¡
+		tblRank.setFont(new Font("³Ø½¼Lv2°íµñ", Font.PLAIN, 20));infoPanel.setVisible(false);
+		
 		tblRank.setFont(new Font("³Ø½¼Lv2°íµñ", Font.PLAIN, 20));
 
 		JScrollPane rankScrollPane = new JScrollPane(tblRank);
@@ -604,13 +657,45 @@ public class Main {
 		joinPanel.setVisible(false);
 		findPwPanel.setVisible(false);
 		friendPanel.setVisible(false);
-		infoPanel.setVisible(false);
 		rankPanel.setVisible(false);
-		RoomPanel.setVisible(false);
-		
-		
+		roomPanel.setVisible(false);
 		
 		// events
+		
+		
+		//·©Å· ÆäÀÌÁö
+		
+		
+		//·©Å· ÆäÀÌÁö°¡ º¸¿©Áú ¶§
+		rankPanel.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentShown(ComponentEvent e) {
+				//·©Å· Á¤¸®ÇØ¼­ tblRank¿¡ Ãß°¡
+				
+				//1.·©Ä¿ 100¸íÀÇ arraylist °¡Á®¿À±â
+				ArrayList<MemberDTO> list = memberDAO.getRanker();
+				
+				//2. ÇÊ¿äÇÑ ³»¿ëÀ¸·Î 2Â÷¿ø¹è¿­ ¸¸µé±â
+				String rankers[][] = new String[list.size()][4];
+				int cnt = 0;
+				for(MemberDTO i : list) {
+					rankers[cnt][0] = String.valueOf(cnt); //·©Å©
+					rankers[cnt][1] = i.getNickname(); //´Ð³×ÀÓ
+					rankers[cnt][2] = String.valueOf(i.getExp() / 100);
+					rankers[cnt][3] = (i.getWin() + "½Â " + i.getLose() + "ÆÐ"); //½ÂÆÐ
+				}
+				
+				//tblRank¿¡ °ª Ãß°¡
+				dtmRank = (DefaultTableModel)tblMain.getModel();
+				dtmRank.setNumRows(0);
+				dtmRank = new DefaultTableModel(rankers, rankHeader){ //¼öÁ¤ ºÒ°¡´ÉÇÑ Å×ÀÌºí·Î
+					public boolean isCellEditable(int rowIndex, int mCollIndex) {
+						return false;
+					}
+				};
+				tblMain.setModel(dtmRank);
+			}
+		});
 		
 		
 		//¸ÞÀÎ ÆäÀÌÁö
@@ -621,6 +706,13 @@ public class Main {
 			@Override
 			public void componentShown(ComponentEvent e) {
 				//mainPanel ÃÊ±âÈ­
+				try {
+					memberDTO = memberDAO.getMember(memberDTO.getMemberId());//memberDTO °»½Å
+				} catch (SQLException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				} 
+				
 				//lblMain ÃÊ±âÈ­
 				StringBuffer msg = new StringBuffer();
 				msg.append("Lv" + memberDTO.getExp() / 100);
@@ -651,7 +743,7 @@ public class Main {
 					//tblMain¿¡ °ª Ãß°¡
 					dtmMain = (DefaultTableModel)tblMain.getModel();
 					dtmMain.setNumRows(0);
-					dtmMain = new DefaultTableModel(rooms, header){ //¼öÁ¤ ºÒ°¡´ÉÇÑ Å×ÀÌºí
+					dtmMain = new DefaultTableModel(rooms, header){ //¼öÁ¤ ºÒ°¡´ÉÇÑ Å×ÀÌºí·Î
 						public boolean isCellEditable(int rowIndex, int mCollIndex) {
 							return false;
 						}
@@ -664,6 +756,270 @@ public class Main {
 					e1.printStackTrace();
 				}
 				
+			}
+		});
+		
+		//¹æ »ý¼º ¹öÆ° ´­·¶À» ¶§
+		btnMainNew.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//1. ¹æ »ý¼º
+				try {
+					if(roomDAO.newRoom(memberDTO.getMemberId())) {
+						//¹æ »ý¼º ¼º°ø ½Ã ³» ¹æ Á¤º¸ °¡Á®¿Â µÚ ¹æ¿¡ ÀÔÀå
+						roomDTO = new RoomDTO();
+						roomDTO.setRoomId(roomDAO.getMyRoom(memberDTO.getMemberId()));
+						roomDTO = roomDAO.getRoom(roomDTO.getRoomId());
+						
+						mainPanel.setVisible(false);
+						roomPanel.setVisible(true);
+					}else {
+						JOptionPane.showMessageDialog(null, "¹æ »ý¼º ½ÇÆÐ");
+					}
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		
+		//¹æ ÀÔÀå ´­·¶À» ¶§
+		btnMainJoin.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//¼±ÅÃµÈ ¹æ ¹øÈ£ °¡Á®¿À±â
+				int col = tblMain.getSelectedColumn();
+				int row = 0;
+				String temp = String.valueOf(tblMain.getValueAt(row, col));
+				int roomId = Integer.parseInt(temp);
+				try {
+					//¹æ ÀÔÀå ¼öÇà
+					if(roomDAO.joinMyRoom(memberDTO.getMemberId(), row)) {
+						//ÀÔÀå¿¡ ¼º°øÇÑ °æ¿ì ÆäÀÌÁö roomPanelÀ¸·Î ÀÌµ¿½ÃÅ´
+						roomDTO = roomDAO.getRoom(roomId); //ÀÌµ¿ÇÒ ¹æÀÇ Á¤º¸¸¦ ¹Ì¸® °¡Á®¿È
+						mainPanel.setVisible(false);
+						roomPanel.setVisible(true);
+					}else {
+						//ÀÔÀå¿¡ ½ÇÆÐÇÑ °æ¿ì
+						JOptionPane.showMessageDialog(null, "°¡µæ Ã¡½À´Ï´Ù. »õ·Î°íÄ§ ÇØ ÁÖ¼¼¿ä");
+					}
+					
+				} catch (Exception e2) {
+					// TODO: handle exception
+				}
+			}
+		});
+		
+		//È¸¿øÁ¤º¸ ¹öÆ° ´­·¶À» ¶§
+		btnMainInfo.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				mainPanel.setVisible(false); //ÇöÀç ÆäÀÌÁö¸¦ ºñÈ°¼ºÈ­
+				infoPanel.setVisible(true); //È¸¿øÁ¤º¸ ÆäÀÌÁö¸¦ È°¼ºÈ­
+			}
+		});
+		
+		//Ä£±¸ ¹öÆ° ´­·¶À» ¶§
+		btnMainFriends.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				mainPanel.setVisible(false); //ÇöÀç ÆäÀÌÁö¸¦ ºñÈ°¼ºÈ­
+				friendPanel.setVisible(true); //Ä£±¸ ÆäÀÌÁö¸¦ È°¼ºÈ­
+			}
+		});
+		
+		//·©Å· ¹öÆ° ´­·¶À» ¶§
+		btnMainRank.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				mainPanel.setVisible(false); //ÇöÀç ÆäÀÌÁö¸¦ ºñÈ°¼ºÈ­
+				rankPanel.setVisible(true); //Ä£±¸ ÆäÀÌÁö¸¦ È°¼ºÈ­
+			}
+		});
+		
+		//·£´ý¸ÅÄª ¹öÆ° ´­·¶À» ¶§
+		btnMainMatch.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+			}
+		});
+		
+		//È¸¿øÁ¤º¸ ÆäÀÌÁö
+		
+		//È¸¿øÁ¤º¸ ÆäÀÌÁö°¡ º¸¿©Áú ¶§
+		infoPanel.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentShown(ComponentEvent e) {
+				try {
+					memberDTO = memberDAO.getMember(memberDTO.getMemberId()); //memberDTO¸¦ °»½Å
+					
+					//³»¿ë ÃÊ±âÈ­
+					lblInfoNickname2.setText(memberDTO.getNickname());
+					lblInfoId2.setText(memberDTO.getMemberId());
+					lblInfoLog2.setText(memberDTO.getMatchCount() + "Àü " + memberDTO.getWin() + "½Â " + memberDTO.getLose() + "ÆÐ");
+					
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		
+		//È¸¿øÁ¤º¸ ¼öÁ¤ ¹öÆ°À» Å¬¸¯ÇßÀ» ¶§
+		btnInfoChange.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(!txtInfoPw1.getText().equals(txtInfoPw2.getText())) {
+					//ÀÔ·ÂÇÑ ºñ¹Ð¹øÈ£µéÀÌ ´Ù¸£¸é
+					JOptionPane.showMessageDialog(null, "»õ ºñ¹Ð¹øÈ£°¡ ´Ù¸¨´Ï´Ù");
+				}else { //ÀÔ·ÂÇÑ »õ ºñ¹Ð¹øÈ£°¡ °°À¸¸é
+					try {
+						if(!memberDAO.login(memberDTO.getMemberId(), txtInfoNowPw.getText())) {
+							//ÀÔ·ÂÇÑ ÇöÀç ºñ¹Ð¹øÈ£°¡ °°À¸¸é
+							//DB¿¡ ÀúÀåµÈ ºñ¹Ð¹øÈ£ ¼öÁ¤
+							if(memberDAO.updatePw(memberDTO.getMemberId(), txtInfoPw1.getText())) {
+								JOptionPane.showMessageDialog(null, "¼öÁ¤¿Ï·á");
+							}else {
+								JOptionPane.showMessageDialog(null, "¼öÁ¤½ÇÆÐ");
+							}
+							txtInfoNowPw.setText("");
+							txtInfoPw1.setText("");
+							txtInfoPw2.setText("");
+							infoPanel.setVisible(false);
+							mainPanel.setVisible(true); //mainPanel·Î ÀÌµ¿
+						}else { //ÀÔ·ÂÇÑ ÇöÀç ºñ¹Ð¹øÈ£°¡ ´Ù¸£¸é
+							JOptionPane.showMessageDialog(null, "ÇöÀç ºñ¹Ð¹øÈ£°¡ Æ²¸³´Ï´Ù");
+							txtInfoNowPw.setText(""); //txtInfoNowPw ºñ¿ì±â
+						}
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+		
+		//µÚ·Î°¡±â ¹öÆ°À» Å¬¸¯ÇßÀ» ¶§
+		btnInfoBack.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				txtInfoNowPw.setText("");
+				txtInfoPw1.setText("");
+				txtInfoPw2.setText("");
+				infoPanel.setVisible(false);
+				mainPanel.setVisible(true); //½Ï ÃÊ±âÈ­ ÈÄ mainPanel·Î ÀÌµ¿
+			}
+		});
+		
+		//°ÔÀÓ¹æ ÆäÀÌÁö
+		
+		//°ÔÀÓ¹æ ÆäÀÌÁö°¡ º¸¿©Áú ¶§
+		roomPanel.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentShown(ComponentEvent e) {
+				//1. ¹æ ÀÔÀå
+				try {
+					if(roomDAO.joinMyRoom(memberDTO.getMemberId(), roomDTO.getRoomId())) {
+						//1. ¹æÀåÀÎ °æ¿ì ¹æ ÀÌ¸§ ¼öÁ¤ È°¼ºÈ­, °­Åð ¹öÆ° È°¼ºÈ­
+						if(roomDTO.getRoomId() == roomDAO.getMyRoom(memberDTO.getMemberId())) {
+							txtRoomName.setEditable(true);
+							btnRoomKick.setVisible(true);
+						}else {
+							//2. ¾Æ´Ñ °æ¿ì ºñÈ°¼ºÈ­
+							txtRoomName.setEditable(false);
+							btnRoomKick.setVisible(false);
+						}
+						//µé¾î¿Í ÀÖ´Â »ç¶÷µé °¡Á®¿À±â
+						ArrayList<ArrayList<String>> list = roomDAO.getMembers(roomDTO.getRoomId());
+						String members[][];
+						
+						//2Â÷¿ø ¹è¿­·Î º¯È¯
+						if(list != null) {
+							members = new String[list.size()][list.get(0).size()];
+							int i = 0;
+							int j = 0;
+							for(ArrayList<String> a : list) {
+								for(String b : a) {
+									members[i][j++] = b;
+								}
+								i++;
+							}
+						}else {
+							members = new String[0][0];
+						}
+						
+						//tblRoom¿¡ °ª Ãß°¡
+						dtmRoom = (DefaultTableModel)tblRoom.getModel();
+						dtmRoom.setNumRows(0);
+						dtmRoom = new DefaultTableModel(members, roomHeader){ //¼öÁ¤ ºÒ°¡´ÉÇÑ Å×ÀÌºí·Î
+							public boolean isCellEditable(int rowIndex, int mCollIndex) {
+								return false;
+							}
+						};
+						tblMain.setModel(dtmMain);
+					}
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		
+		//»õ·Î°íÄ§ ¹öÆ°À» ´­·¶À» ¶§
+		btnMainRefresh.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				try {
+					//µé¾î¿Í ÀÖ´Â »ç¶÷µé °¡Á®¿À±â
+					ArrayList<ArrayList<String>> list = roomDAO.getMembers(roomDTO.getRoomId());
+					String members[][];
+					
+					//2Â÷¿ø ¹è¿­·Î º¯È¯
+					if(list != null) {
+						members = new String[list.size()][list.get(0).size()];
+						int i = 0;
+						int j = 0;
+						for(ArrayList<String> a : list) {
+							for(String b : a) {
+								members[i][j++] = b;
+							}
+							i++;
+						}
+					}else {
+						members = new String[0][0];
+					}
+					
+					//tblRoom¿¡ °ª Ãß°¡
+					dtmRoom = (DefaultTableModel)tblRoom.getModel();
+					dtmRoom.setNumRows(0);
+					dtmRoom = new DefaultTableModel(members, roomHeader){ //¼öÁ¤ ºÒ°¡´ÉÇÑ Å×ÀÌºí·Î
+						public boolean isCellEditable(int rowIndex, int mCollIndex) {
+							return false;
+						}
+					};
+					tblMain.setModel(dtmMain);
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		
+		//¹æ ³ª°¡±â¸¦ ´­·¶À» ¶§
+		btnRoomBack.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//¹æ ³ª°¡±â ¼öÇà
+				try {
+					roomDAO.roomOut(memberDTO.getMemberId(), roomDTO.getRoomId());
+					//¼öÇà ÈÄ ÆäÀÌÁö ÀÌµ¿
+					roomPanel.setVisible(false);
+					mainPanel.setVisible(true);
+				} catch (Exception e2) {
+					// TODO: handle exception
+					e2.printStackTrace();
+				}
 			}
 		});
 		
