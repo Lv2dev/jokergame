@@ -415,13 +415,13 @@ public class RoomDAO extends JDBConnect {
 	// 배팅 버튼 누르기
 	// 한번 누르면 10 올라가고 최대 100까지 올라감, 100에서 한번 더 누르면 10으로 돌아감
 	// 열려있는 방의 roomDTO들을 가져오는 메서드
-	public synchronized boolean setBet(int bet, int roomId, String memberId) throws SQLException {
+	public synchronized boolean setBet(int roomId, String memberId) throws SQLException {
 		try {
 			conn = dbConn.getConn();
 			query = new StringBuffer();
 			query.append("UPDATE room_member SET bet_exp =  ");
 			query.append("CASE bet_exp < 100 THEN bet_exp + 10 "); //기존의 배팅경험치가 100미만이면 10을 더함
-			query.append("ELSE 10 "); //아닌 경우 bet_exp를 10으로 업데이트
+			query.append("ELSE 10 END"); //아닌 경우 bet_exp를 10으로 업데이트
 			query.append("WHERE room_id = ? AND member_id = ? ");
 			//roomId, memberId
 			

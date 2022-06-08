@@ -1512,6 +1512,45 @@ public class Main {
 		btnRoomBet.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				try {
+				//배팅 경험치 수정 수행
+				if (roomDAO.setBet(roomDTO.getRoomId(), memberDTO.getMemberId())) { //성공 시
+					//들어와 있는 사람들 가져오기
+					ArrayList<ArrayList<String>> list = roomDAO.getMembers(roomDTO.getRoomId());
+					String members[][];
+					
+					//2차원 배열로 변환
+					if(list != null) {
+						members = new String[list.size()][list.get(0).size()];
+						int i = 0;
+						int j = 0;
+						for(ArrayList<String> a : list) {
+							for(String b : a) {
+								members[i][j++] = b;
+							}
+							j = 0;
+							i++;
+						}
+					}else {
+						members = new String[0][0];
+					}
+					
+					//tblRoom에 값 추가
+					dtmRoom = (DefaultTableModel)tblRoom.getModel();
+					dtmRoom.setNumRows(0);
+					dtmRoom = new DefaultTableModel(members, roomHeader){ //수정 불가능한 테이블로
+						public boolean isCellEditable(int rowIndex, int mCollIndex) {
+							return false;
+						}
+					};
+					tblRoom.setModel(dtmRoom);
+				} else {
+					JOptionPane.showMessageDialog(null, "배팅 실패");
+				}
+				}catch (Exception e2) {
+					// TODO: handle exception
+					e2.printStackTrace();
+				}
 			}
 		});
 		
