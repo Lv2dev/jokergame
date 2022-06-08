@@ -187,5 +187,60 @@ public class FriendsDAO extends JDBConnect{
 		}
 	}
 	
-	//친구요청 거절
+	//받은 친구요청 거절
+	//member1 : 받는사람, member2 : 보낸사람
+	public synchronized boolean ignoreFriend(String memberId1, String memberId2) throws SQLException{
+		try {
+			conn = dbConn.getConn();
+			query = new StringBuffer();
+			query.append("delete friends_request where member1_id = ? and member2_id = ?");
+			
+			pstmt = conn.prepareStatement(query.toString());
+			
+			pstmt.setString(1, memberId1);
+			pstmt.setString(2, memberId2);
+			
+			if (0 == pstmt.executeUpdate()) {
+				return false;
+			}
+			
+			return true;
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			System.out.println("친구요청 거절 오류 " + e.getMessage());
+			return false;
+		} finally {
+			disconnectPstmt();
+		}
+	}
+	
+	//친구삭제
+	public synchronized boolean deleteFriend(String memberId1, String memberId2) throws SQLException{
+		try {
+			conn = dbConn.getConn();
+			query = new StringBuffer();
+			query.append("delete friends_request where (member1_id = ? and member2_id = ?) or (member2_id = ? and member1_id = ?)");
+			
+			pstmt = conn.prepareStatement(query.toString());
+			
+			pstmt.setString(1, memberId1);
+			pstmt.setString(2, memberId2);
+			pstmt.setString(3, memberId1);
+			pstmt.setString(4, memberId2);
+			
+			if (0 == pstmt.executeUpdate()) {
+				return false;
+			}
+			
+			return true;
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			System.out.println("친구 삭제 오류 " + e.getMessage());
+			return false;
+		} finally {
+			disconnectPstmt();
+		}
+	}
 }

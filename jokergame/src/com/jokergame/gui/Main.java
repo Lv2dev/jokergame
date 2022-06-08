@@ -490,6 +490,7 @@ public class Main {
 		roomPanel.add(btnRoomReady);
 
 		JButton btnRoomBet = new JButton("\uBC30\uD305");
+		
 		btnRoomBet.setFont(new Font("넥슨Lv2고딕 Bold", Font.PLAIN, 30));
 		btnRoomBet.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
 		btnRoomBet.setBounds(600, 660, 160, 70);
@@ -543,11 +544,12 @@ public class Main {
 		btnFriendSure.setBounds(30, 660, 160, 70);
 		friendPanel.add(btnFriendSure);
 
-		JButton btnMainMatch_1 = new JButton("\uAC70\uC808");
-		btnMainMatch_1.setFont(new Font("넥슨Lv2고딕 Bold", Font.PLAIN, 30));
-		btnMainMatch_1.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
-		btnMainMatch_1.setBounds(220, 660, 160, 70);
-		friendPanel.add(btnMainMatch_1);
+		JButton btnFriendIgnore = new JButton("\uAC70\uC808");
+		
+		btnFriendIgnore.setFont(new Font("넥슨Lv2고딕 Bold", Font.PLAIN, 30));
+		btnFriendIgnore.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
+		btnFriendIgnore.setBounds(220, 660, 160, 70);
+		friendPanel.add(btnFriendIgnore);
 
 		JButton btnFriendAdd = new JButton("\uCD94\uAC00");
 		
@@ -563,6 +565,7 @@ public class Main {
 		friendPanel.add(btnFriendJoin);
 
 		JButton btnFriendDel = new JButton("\uC0AD\uC81C");
+		
 		btnFriendDel.setFont(new Font("넥슨Lv2고딕 Bold", Font.PLAIN, 30));
 		btnFriendDel.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
 		btnFriendDel.setBounds(600, 660, 160, 70);
@@ -839,6 +842,176 @@ public class Main {
 			}
 		});
 		
+		//친구 삭제 버튼 눌렀을 때
+		btnFriendDel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try {
+					//1. 선택된 회원의 아이디 가져오기
+					int col = tblInvite.getSelectedColumn();
+					int row = 0;
+					String member2Id = String.valueOf(tblFriends.getValueAt(row, col));
+					//2. 친구 삭제 시도
+					if(friendsDAO.deleteFriend(memberDTO.getMemberId(), member2Id)) { //성공 시
+						JOptionPane.showMessageDialog(null, "삭제 성공");
+						//친구 테이블과 친구요청 테이블 갱신
+						//1. 친구 목록을 가져옴
+						ArrayList<FriendsDTO> list = friendsDAO.getFriends(memberDTO.getMemberId());
+						if(list != null) { //친구 목록이 있을때 수행
+							//2. 친구 목록 테이블에 들어갈 수 있도록 정제
+							String friends[][] = new String[list.size()][4];
+							int cnt = 0;
+							for(FriendsDTO i : list) {
+								if(memberDTO.getMemberId().equals(i.getMember1Id())) { // 내가 member1이면
+									friends[cnt][0] = i.getMember2Id(); // member2의 id 넣음
+								}else {
+									friends[cnt][0] = i.getMember1Id(); //아니면 member1의 아이디 넣음
+								}
+								int state = memberDAO.getState(friends[cnt][0]);
+								String temp = "";
+								if(0 == state) { //현재 상태에 맞춰 메시지 입력
+									temp = "로그아웃";
+								}else if(1 == state) {
+									temp = "로그인";
+								}else if(2 == state) {
+									temp = "대기실";
+								}else {
+									temp = "게임중";
+								}
+								friends[cnt][1] = temp;
+								cnt++;
+							}
+							
+							//3. 친구 목록 테이블에 삽입
+							dtmFriends = (DefaultTableModel)tblFriends.getModel();
+							dtmFriends.setNumRows(0);
+							dtmFriends = new DefaultTableModel(friends, friendHeader){ //수정 불가능한 테이블로
+								public boolean isCellEditable(int rowIndex, int mCollIndex) {
+									return false;
+								}
+							};
+							tblFriends.setModel(dtmFriends);
+						} else { //친구 목록이 없을 때 수행
+							//친구 목록 테이블 초기화
+							dtmFriends = (DefaultTableModel)tblFriends.getModel();
+							dtmFriends.setNumRows(0);
+							dtmFriends = new DefaultTableModel(friendContent, friendHeader){ //수정 불가능한 테이블로
+								public boolean isCellEditable(int rowIndex, int mCollIndex) {
+									return false;
+								}
+							};
+						}
+					}else {
+						JOptionPane.showMessageDialog(null, "삭제 실패");
+					}
+				} catch (Exception e2) {
+					// TODO: handle exception
+					e2.printStackTrace();
+				}
+			}
+		});
+		
+		//거절 버튼 눌렀을 때
+		btnFriendIgnore.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try {
+					//1. 선택된 회원의 아이디 가져오기
+					int col = tblInvite.getSelectedColumn();
+					int row = 0;
+					String member2Id = String.valueOf(tblInvite.getValueAt(row, col));
+					
+					//2. 요청 수락 수행
+					if(friendsDAO.ignoreFriend(memberDTO.getMemberId(), member2Id)) { //성공 시
+						//친구 테이블과 친구요청 테이블 갱신
+						//1. 친구 목록을 가져옴
+						ArrayList<FriendsDTO> list = friendsDAO.getFriends(memberDTO.getMemberId());
+						if(list != null) { //친구 목록이 있을때 수행
+							//2. 친구 목록 테이블에 들어갈 수 있도록 정제
+							String friends[][] = new String[list.size()][4];
+							int cnt = 0;
+							for(FriendsDTO i : list) {
+								if(memberDTO.getMemberId().equals(i.getMember1Id())) { // 내가 member1이면
+									friends[cnt][0] = i.getMember2Id(); // member2의 id 넣음
+								}else {
+									friends[cnt][0] = i.getMember1Id(); //아니면 member1의 아이디 넣음
+								}
+								int state = memberDAO.getState(friends[cnt][0]);
+								String temp = "";
+								if(0 == state) { //현재 상태에 맞춰 메시지 입력
+									temp = "로그아웃";
+								}else if(1 == state) {
+									temp = "로그인";
+								}else if(2 == state) {
+									temp = "대기실";
+								}else {
+									temp = "게임중";
+								}
+								friends[cnt][1] = temp;
+								cnt++;
+							}
+							
+							//3. 친구 목록 테이블에 삽입
+							dtmFriends = (DefaultTableModel)tblFriends.getModel();
+							dtmFriends.setNumRows(0);
+							dtmFriends = new DefaultTableModel(friends, friendHeader){ //수정 불가능한 테이블로
+								public boolean isCellEditable(int rowIndex, int mCollIndex) {
+									return false;
+								}
+							};
+							tblFriends.setModel(dtmFriends);
+						} else { //친구 목록이 없을 때 수행
+							//친구 목록 테이블 초기화
+							dtmFriends = (DefaultTableModel)tblFriends.getModel();
+							dtmFriends.setNumRows(0);
+							dtmFriends = new DefaultTableModel(friendContent, friendHeader){ //수정 불가능한 테이블로
+								public boolean isCellEditable(int rowIndex, int mCollIndex) {
+									return false;
+								}
+							};
+						}
+						//1. 친구 요청 목록을 가져옴
+						ArrayList<ReqDTO> list2 = reqDAO.getReqs(memberDTO.getMemberId());
+						if(list2 != null) { //요청 목록이 있을때 수행
+							//2. 정제
+							String reqs[][] = new String[list2.size()][1];
+							int cnt = 0;
+							for(ReqDTO i : list2) {
+								reqs[cnt][0] = i.getMember2Id(); //요청 보낸 사람의 아이디 저장
+								cnt++;
+							}
+							
+							//3. 요청 목록 테이블에 삽입
+							dtmInvite = (DefaultTableModel)tblInvite.getModel();
+							dtmInvite.setNumRows(0);
+							dtmInvite = new DefaultTableModel(reqs, inviteHeader){ //수정 불가능한 테이블로
+								public boolean isCellEditable(int rowIndex, int mCollIndex) {
+									return false;
+								}
+							};
+							tblInvite.setModel(dtmInvite);
+						}else { //요청목록 없으면
+							//테이블 초기화
+							dtmInvite = (DefaultTableModel)tblInvite.getModel();
+							dtmInvite.setNumRows(0);
+							dtmInvite = new DefaultTableModel(inviteContent, inviteHeader){ //수정 불가능한 테이블로
+								public boolean isCellEditable(int rowIndex, int mCollIndex) {
+									return false;
+								}
+							};
+							tblInvite.setModel(dtmInvite);
+						}
+					}else { //실패 시
+						JOptionPane.showMessageDialog(null, "거절 실패");
+					}
+					
+				} catch (Exception e2) {
+					// TODO: handle exception
+					e2.printStackTrace();
+				}
+			}
+		});
+		
 		//요청 수락 버튼 눌렀을 때
 		btnFriendSure.addMouseListener(new MouseAdapter() {
 			@Override
@@ -898,8 +1071,6 @@ public class Main {
 								}
 							};
 						}
-						
-						
 						//1. 친구 요청 목록을 가져옴
 						ArrayList<ReqDTO> list2 = reqDAO.getReqs(memberDTO.getMemberId());
 						if(list2 != null) { //요청 목록이 있을때 수행
@@ -1334,6 +1505,13 @@ public class Main {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+			}
+		});
+		
+		//배팅 버튼 눌렀을 때
+		btnRoomBet.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
 			}
 		});
 		

@@ -137,15 +137,16 @@ public class RoomDAO extends JDBConnect {
 	}
 
 	// 방 입장
-	//1. 방의 인원이 가득 차진 않았는지 체크
-	//2. 입장시키기
+	// 1. 방의 인원이 가득 차진 않았는지 체크
+	// 2. 입장시키기
 	public synchronized boolean joinMyRoom(String memberId, int roomId) throws SQLException {
 		try {
 			conn = dbConn.getConn();
-			
+
 			query = new StringBuffer();
-			//roomId, memberId
-			query.append("insert into room_member(room_id, member_id) select ?, ? from DUAL where EXISTS(select * from ");
+			// roomId, memberId
+			query.append(
+					"insert into room_member(room_id, member_id) select ?, ? from DUAL where EXISTS(select * from ");
 			query.append("(select count(rm.member_id) as cnt from room as r ");
 			query.append("inner join room_member as rm on r.room_id = rm.room_id) as mmm where cnt < 6) ");
 
@@ -155,25 +156,24 @@ public class RoomDAO extends JDBConnect {
 			pstmt.setString(2, memberId);
 
 			if (pstmt.executeUpdate() != 1) {
-				return false; //방이 꽉 찼을때 리턴됨
+				return false; // 방이 꽉 찼을때 리턴됨
 			}
-			
+
 			pstmt.close();
-			
-			//방 인원 0명인 경우 방장을 방금 입장한 사람으로 바꾸는 부분 추가
+
+			// 방 인원 0명인 경우 방장을 방금 입장한 사람으로 바꾸는 부분 추가
 			query = new StringBuffer();
-			
+
 			query.append("update room ");
-			query.append("set member_id = ? "); //memberId
-			query.append("where (SELECT count(id) FROM room_member WHERE room_id = ?) = 0 "); //roomId
+			query.append("set member_id = ? "); // memberId
+			query.append("where (SELECT count(id) FROM room_member WHERE room_id = ?) = 0 "); // roomId
 			pstmt = conn.prepareStatement(query.toString());
-			
+
 			pstmt.setString(1, memberId);
 			pstmt.setInt(2, roomId);
-			
-			
+
 			pstmt.executeUpdate();
-			
+
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -220,17 +220,17 @@ public class RoomDAO extends JDBConnect {
 			disconnectPstmt();
 		}
 	}
-	
-	//해당 방의 인원들 가져오기
+
+	// 해당 방의 인원들 가져오기
 	public synchronized ArrayList<ArrayList<String>> getMembers(int roomId) throws SQLException {
 		try {
 			conn = dbConn.getConn();
 			query = new StringBuffer();
-			
-			//레벨, 닉네임, 배팅경험치, 준비상태
+
+			// 레벨, 닉네임, 배팅경험치, 준비상태
 			query.append("SELECT m.exp, m.member_id, rm.bet_exp, rm.ready ");
 			query.append("FROM member as m INNER JOIN room_member as rm ");
-			//roomId
+			// roomId
 			query.append("ON m.member_id = rm.member_id and rm.room_id = ? ");
 
 			pstmt = conn.prepareStatement(query.toString());
@@ -239,7 +239,7 @@ public class RoomDAO extends JDBConnect {
 
 			rs = pstmt.executeQuery();
 
-			//반환할 2차원 ArrayList 생성
+			// 반환할 2차원 ArrayList 생성
 			ArrayList<ArrayList<String>> list = new ArrayList<ArrayList<String>>();
 			int cnt = 0;
 			while (rs.next()) {
@@ -264,55 +264,54 @@ public class RoomDAO extends JDBConnect {
 			disconnectPstmt();
 		}
 	}
-	
-	//방 나가기 - 현재 인원이 0이 된 방도 이어서 삭제
-	public synchronized boolean roomOut(String memberId, int roomId) throws SQLException{
+
+	// 방 나가기 - 현재 인원이 0이 된 방도 이어서 삭제
+	public synchronized boolean roomOut(String memberId, int roomId) throws SQLException {
 		try {
 			conn = dbConn.getConn();
 			query = new StringBuffer();
-			
+
 			query.append("delete from room_member where member_id = ? ");
 			pstmt = conn.prepareStatement(query.toString());
 			pstmt.setString(1, memberId);
-			
-			
-			if(pstmt.executeUpdate() > 0) {
+
+			if (pstmt.executeUpdate() > 0) {
 				pstmt.close();
-				
+
 				query = new StringBuffer();
 				query.append("delete from room where (select count(id) from room_member where room_id = ?) = 0");
 				pstmt = conn.prepareStatement(query.toString());
 				pstmt.setInt(1, roomId);
 				pstmt.executeUpdate();
-				
+
 				return true;
 			}
 			return false;
-		}catch (Exception e) {
+		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 			System.out.println("방 나가기 오류 " + e.getMessage());
 			return false;
-		}finally {
+		} finally {
 			disconnectPstmt();
 		}
 	}
-	
-	//방 이름 가져오기
-	public synchronized String getRoomName(int roomId) throws SQLException{
+
+	// 방 이름 가져오기
+	public synchronized String getRoomName(int roomId) throws SQLException {
 		try {
 			conn = dbConn.getConn();
 			query = new StringBuffer();
-			query.append("select name from room where room_id = ?"); //roomId
+			query.append("select name from room where room_id = ?"); // roomId
 			pstmt = conn.prepareStatement(query.toString());
 			pstmt.setInt(1, roomId);
 			rs = pstmt.executeQuery();
-			
+
 			String name = "";
-			while(rs.next()) {
+			while (rs.next()) {
 				name = rs.getString("name");
 			}
-			
+
 			return name;
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -323,24 +322,24 @@ public class RoomDAO extends JDBConnect {
 			disconnectPstmt();
 		}
 	}
-	
-	//방 이름 변경하기
-	public synchronized boolean updateRoomName(int roomId, String roomName) throws SQLException{
+
+	// 방 이름 변경하기
+	public synchronized boolean updateRoomName(int roomId, String roomName) throws SQLException {
 		try {
 			conn = dbConn.getConn();
 			query = new StringBuffer();
 			query.append("update room set ");
-			query.append("name = ? ");//roomName
-			query.append("where room_id = ? ");//roomId
-			
+			query.append("name = ? ");// roomName
+			query.append("where room_id = ? ");// roomId
+
 			pstmt = conn.prepareStatement(query.toString());
 			pstmt.setString(1, roomName);
 			pstmt.setInt(2, roomId);
-			if(pstmt.executeUpdate() > 0) {
+			if (pstmt.executeUpdate() > 0) {
 				return true;
 			}
 			return false;
-			
+
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -350,8 +349,8 @@ public class RoomDAO extends JDBConnect {
 			disconnectPstmt();
 		}
 	}
-	
-	//유저의 준비상태를 변경하기
+
+	// 유저의 준비상태를 변경하기
 	public synchronized boolean setReady(String memberId, int roomId) throws SQLException {
 		try {
 			conn = dbConn.getConn();
@@ -362,16 +361,16 @@ public class RoomDAO extends JDBConnect {
 			query.append("when ready = 1 then 0 ");
 			query.append("else ready end ");
 			query.append("where member_id = ? AND room_id = ?  ");
-			
+
 			pstmt = conn.prepareStatement(query.toString());
 			pstmt.setString(1, memberId);
 			pstmt.setInt(2, roomId);
-			
-			if(pstmt.executeUpdate() > 0) {
+
+			if (pstmt.executeUpdate() > 0) {
 				return true;
 			}
-			
-			return false; 
+
+			return false;
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -381,19 +380,19 @@ public class RoomDAO extends JDBConnect {
 			disconnectPstmt();
 		}
 	}
-	
-	//열려있는 방의 roomDTO들을 가져오는 메서드
-	public synchronized ArrayList<RoomDTO> getRoomDTOs(int state) throws SQLException{
+
+	// 열려있는 방의 roomDTO들을 가져오는 메서드
+	public synchronized ArrayList<RoomDTO> getRoomDTOs(int state) throws SQLException {
 		try {
 			conn = dbConn.getConn();
 			query = new StringBuffer();
 			query.append("SELECT * FROM room WHERE status = ?");
 			pstmt = conn.prepareStatement(query.toString());
 			pstmt.setInt(1, state);
-			
+
 			rs = pstmt.executeQuery();
 			ArrayList<RoomDTO> list = new ArrayList<RoomDTO>();
-			while(rs.next()) {
+			while (rs.next()) {
 				RoomDTO dto = new RoomDTO();
 				dto.setMemberId(rs.getString("member_id"));
 				dto.setName(rs.getString("name"));
@@ -401,13 +400,45 @@ public class RoomDAO extends JDBConnect {
 				dto.setStatus(rs.getInt("status"));
 				list.add(dto);
 			}
-			
+
 			return list;
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 			System.out.println("RoomDTO들을 가져오는 메서드 오류 " + e.getMessage());
 			return null;
+		} finally {
+			disconnectPstmt();
+		}
+	}
+
+	// 배팅 버튼 누르기
+	// 한번 누르면 10 올라가고 최대 100까지 올라감, 100에서 한번 더 누르면 10으로 돌아감
+	// 열려있는 방의 roomDTO들을 가져오는 메서드
+	public synchronized boolean setBet(int bet, int roomId, String memberId) throws SQLException {
+		try {
+			conn = dbConn.getConn();
+			query = new StringBuffer();
+			query.append("UPDATE room_member SET bet_exp =  ");
+			query.append("CASE bet_exp < 100 THEN bet_exp + 10 "); //기존의 배팅경험치가 100미만이면 10을 더함
+			query.append("ELSE 10 "); //아닌 경우 bet_exp를 10으로 업데이트
+			query.append("WHERE room_id = ? AND member_id = ? ");
+			//roomId, memberId
+			
+			pstmt = conn.prepareStatement(query.toString());
+			pstmt.setInt(1, roomId);
+			pstmt.setString(2, memberId);
+
+			if(0 == pstmt.executeUpdate()) {
+				return false;
+			}
+
+			return true;
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			System.out.println("배팅 버튼 누르기 오류 " + e.getMessage());
+			return false;
 		} finally {
 			disconnectPstmt();
 		}
