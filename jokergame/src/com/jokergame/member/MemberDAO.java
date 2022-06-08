@@ -234,7 +234,7 @@ public class MemberDAO extends JDBConnect{
 			conn = dbConn.getConn();
 			query = new StringBuffer();
 			
-			query.append("SELECT * FROM member order by exp limit 100");
+			query.append("SELECT * FROM member order by exp desc limit 100");
 			
 			pstmt = conn.prepareStatement(query.toString());
 			
@@ -263,6 +263,38 @@ public class MemberDAO extends JDBConnect{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+	}
+	
+	//member_id로 state 가져오기
+	public synchronized int getState(String memberId) throws SQLException{
+		try {
+			conn = dbConn.getConn();
+			query = new StringBuffer();
+			query.append("select state from member where member_id = ?");
+			pstmt = conn.prepareStatement(query.toString());
+			pstmt.setString(1, memberId);
+			rs = pstmt.executeQuery();
+			
+			int cnt = 0;
+			int state = 0;
+			while(rs.next()) {
+				state = rs.getInt("state");
+				cnt++;
+			}
+			
+			if(cnt == 0) {
+				return 99;
+			}
+			
+			return state;
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			System.out.println("member_id로 state 가져오기 오류 " + e.getMessage());
+			return 99;
+		} finally {
+			disconnectPstmt();
 		}
 	}
 }

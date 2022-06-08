@@ -2,6 +2,7 @@ package com.jokergame.room;
 
 public class RoomMemberDTO {
 	private int id;
+	private int exp;
 	private int room_id;
 	private int member_id;
 	private int bet_exp;
@@ -38,6 +39,12 @@ public class RoomMemberDTO {
 	}
 	public void setReady(int ready) {
 		this.ready = ready;
+	}
+	public int getExp() {
+		return exp;
+	}
+	public void setExp(int exp) {
+		this.exp = exp;
 	}
 	
 }

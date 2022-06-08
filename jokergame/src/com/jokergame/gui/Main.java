@@ -11,6 +11,10 @@ import java.awt.Point;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
+import com.jokergame.friends.FriendsDAO;
+import com.jokergame.friends.FriendsDTO;
+import com.jokergame.friends.ReqDAO;
+import com.jokergame.friends.ReqDTO;
 import com.jokergame.member.MemberDAO;
 import com.jokergame.member.MemberDTO;
 import com.jokergame.room.RoomDAO;
@@ -27,6 +31,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
 import java.awt.event.ComponentAdapter;
@@ -38,6 +45,12 @@ public class Main {
 	
 	RoomDAO roomDAO = RoomDAO.getInstance();
 	RoomDTO roomDTO;
+	
+	FriendsDAO friendsDAO = FriendsDAO.getInstance();
+	FriendsDTO friendsDTO;
+	
+	ReqDAO reqDAO = ReqDAO.getInstance();
+	ReqDTO reqDTO;
 
 	private JFrame mainFrame;
 	private JTextField txtId;
@@ -60,7 +73,12 @@ public class Main {
 	private DefaultTableModel dtmRoom;
 	private JTable tblRank;
 	private DefaultTableModel dtmRank;
+	private JTable tblFriends;
+	private DefaultTableModel dtmFriends;
+	private JTable tblInvite;
+	private DefaultTableModel dtmInvite;
 	private JTextField txtRoomName;
+	private JTextField txtFriendId;
 
 	/**
 	 * Launch the application.
@@ -90,7 +108,7 @@ public class Main {
 	 */
 	private void initialize() {
 		String roomContent[][] = {};
-		String roomHeader[] = { "레벨", "닉네임", "배팅경험치", "준비" };
+		String roomHeader[] = { "레벨", "아이디", "배팅경험치", "준비" };
 
 		String inviteContent[][] = {};
 		String inviteHeader[] = { "받은초대" };
@@ -173,6 +191,7 @@ public class Main {
 																										
 																										
 																												JButton btnMainRefresh = new JButton("#");
+																												
 																												
 																												btnMainRefresh.setBounds(880, 30, 70, 70);
 																												btnMainRefresh.setFont(new Font("넥슨Lv2고딕 Bold", Font.PLAIN, 30));
@@ -451,6 +470,7 @@ public class Main {
 		mainFrame.getContentPane().add(roomPanel);
 
 		JButton btnRoomName = new JButton("\uC774\uB984\uBCC0\uACBD");
+		
 		btnRoomName.setFont(new Font("넥슨Lv2고딕 Bold", Font.PLAIN, 30));
 		btnRoomName.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
 		btnRoomName.setBounds(30, 660, 160, 70);
@@ -463,6 +483,7 @@ public class Main {
 		roomPanel.add(btnRoomKick);
 
 		JButton btnRoomReady = new JButton("\uC900\uBE44\uC644\uB8CC");
+		
 		btnRoomReady.setFont(new Font("넥슨Lv2고딕 Bold", Font.PLAIN, 30));
 		btnRoomReady.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
 		btnRoomReady.setBounds(790, 660, 160, 70);
@@ -503,22 +524,24 @@ public class Main {
 		roomPanel.add(txtRoomName);
 		txtRoomName.setColumns(10);
 		
-		JButton btnRoomName_1 = new JButton("\uC0C8\uB85C\uACE0\uCE68");
-		btnRoomName_1.setFont(new Font("넥슨Lv2고딕 Bold", Font.PLAIN, 30));
-		btnRoomName_1.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
-		btnRoomName_1.setBounds(220, 660, 160, 70);
-		roomPanel.add(btnRoomName_1);
+		JButton btnRoomRefresh = new JButton("\uC0C8\uB85C\uACE0\uCE68");
+		
+		btnRoomRefresh.setFont(new Font("넥슨Lv2고딕 Bold", Font.PLAIN, 30));
+		btnRoomRefresh.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
+		btnRoomRefresh.setBounds(220, 660, 160, 70);
+		roomPanel.add(btnRoomRefresh);
 
 		JPanel friendPanel = new JPanel();
+		
 		friendPanel.setLayout(null);
 		friendPanel.setBounds(0, 0, 982, 761);
 		mainFrame.getContentPane().add(friendPanel);
 
-		JButton btnMainFriend = new JButton("\uC218\uB77D");
-		btnMainFriend.setFont(new Font("넥슨Lv2고딕 Bold", Font.PLAIN, 30));
-		btnMainFriend.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
-		btnMainFriend.setBounds(30, 660, 160, 70);
-		friendPanel.add(btnMainFriend);
+		JButton btnFriendSure = new JButton("\uC218\uB77D");
+		btnFriendSure.setFont(new Font("넥슨Lv2고딕 Bold", Font.PLAIN, 30));
+		btnFriendSure.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
+		btnFriendSure.setBounds(30, 660, 160, 70);
+		friendPanel.add(btnFriendSure);
 
 		JButton btnMainMatch_1 = new JButton("\uAC70\uC808");
 		btnMainMatch_1.setFont(new Font("넥슨Lv2고딕 Bold", Font.PLAIN, 30));
@@ -526,24 +549,34 @@ public class Main {
 		btnMainMatch_1.setBounds(220, 660, 160, 70);
 		friendPanel.add(btnMainMatch_1);
 
-		JButton btnMainDel_1 = new JButton("\uCD94\uAC00");
-		btnMainDel_1.setFont(new Font("넥슨Lv2고딕 Bold", Font.PLAIN, 30));
-		btnMainDel_1.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
-		btnMainDel_1.setBounds(410, 660, 160, 70);
-		friendPanel.add(btnMainDel_1);
+		JButton btnFriendAdd = new JButton("\uCD94\uAC00");
+		
+		btnFriendAdd.setFont(new Font("넥슨Lv2고딕 Bold", Font.PLAIN, 30));
+		btnFriendAdd.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
+		btnFriendAdd.setBounds(410, 660, 160, 70);
+		friendPanel.add(btnFriendAdd);
 
-		JButton btnMainJoin_1 = new JButton("\uB530\uB77C\uAC00\uAE30");
-		btnMainJoin_1.setFont(new Font("넥슨Lv2고딕 Bold", Font.PLAIN, 30));
-		btnMainJoin_1.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
-		btnMainJoin_1.setBounds(790, 660, 160, 70);
-		friendPanel.add(btnMainJoin_1);
+		JButton btnFriendJoin = new JButton("\uB530\uB77C\uAC00\uAE30");
+		btnFriendJoin.setFont(new Font("넥슨Lv2고딕 Bold", Font.PLAIN, 30));
+		btnFriendJoin.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
+		btnFriendJoin.setBounds(790, 660, 160, 70);
+		friendPanel.add(btnFriendJoin);
 
-		JButton btnMainNew_1 = new JButton("\uC0AD\uC81C");
-		btnMainNew_1.setFont(new Font("넥슨Lv2고딕 Bold", Font.PLAIN, 30));
-		btnMainNew_1.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
-		btnMainNew_1.setBounds(600, 660, 160, 70);
-		friendPanel.add(btnMainNew_1);
-		JTable tblInvite = new JTable(inviteContent, inviteHeader);
+		JButton btnFriendDel = new JButton("\uC0AD\uC81C");
+		btnFriendDel.setFont(new Font("넥슨Lv2고딕 Bold", Font.PLAIN, 30));
+		btnFriendDel.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
+		btnFriendDel.setBounds(600, 660, 160, 70);
+		friendPanel.add(btnFriendDel);
+		dtmInvite = new DefaultTableModel(inviteContent, inviteHeader) {
+			public boolean isCellEditable(int rowIndex, int mCollIndex) {
+			return false;
+			}
+			};
+		tblInvite = new JTable(dtmInvite);
+		tblInvite.getTableHeader().setReorderingAllowed(false); //이동불가
+		tblInvite.getTableHeader().setResizingAllowed(false); //크기조절불가
+		tblInvite.setFont(new Font("넥슨Lv2고딕", Font.PLAIN, 20));infoPanel.setVisible(false);
+		
 		tblInvite.setFont(new Font("넥슨Lv2고딕", Font.PLAIN, 20));
 
 		JScrollPane inviteScroll = new JScrollPane(tblInvite);
@@ -555,10 +588,19 @@ public class Main {
 		btnFriendsBack.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
 		btnFriendsBack.setBounds(30, 30, 100, 70);
 		friendPanel.add(btnFriendsBack);
-		JTable tblFriend = new JTable(friendContent, friendHeader);
-		tblFriend.setFont(new Font("넥슨Lv2고딕", Font.PLAIN, 20));
+		dtmFriends = new DefaultTableModel(friendContent, friendHeader) {
+			public boolean isCellEditable(int rowIndex, int mCollIndex) {
+			return false;
+			}
+			};
+		tblFriends = new JTable(dtmFriends);
+		tblFriends.getTableHeader().setReorderingAllowed(false); //이동불가
+		tblFriends.getTableHeader().setResizingAllowed(false); //크기조절불가
+		tblFriends.setFont(new Font("넥슨Lv2고딕", Font.PLAIN, 20));infoPanel.setVisible(false);
+		
+		tblFriends.setFont(new Font("넥슨Lv2고딕", Font.PLAIN, 20));
 
-		JScrollPane friendScroll = new JScrollPane(tblFriend);
+		JScrollPane friendScroll = new JScrollPane(tblFriends);
 		friendScroll.setBounds(450, 120, 500, 510);
 		friendPanel.add(friendScroll);
 
@@ -567,6 +609,11 @@ public class Main {
 		rblInfo_1.setFont(new Font("넥슨Lv2고딕 Bold", Font.PLAIN, 40));
 		rblInfo_1.setBounds(350, 30, 600, 70);
 		friendPanel.add(rblInfo_1);
+		
+		txtFriendId = new JTextField();
+		txtFriendId.setBounds(0, 0, 116, 21);
+		friendPanel.add(txtFriendId);
+		txtFriendId.setColumns(10);
 
 		JPanel rankPanel = new JPanel();
 		
@@ -575,6 +622,7 @@ public class Main {
 		rankPanel.setLayout(null);
 
 		JButton btnRankBack = new JButton("\u25C1");
+		
 		btnRankBack.setFont(new Font("넥슨Lv2고딕", Font.PLAIN, 20));
 		btnRankBack.setActionCommand("\uBE44\uBC88\uCC3E\uAE30");
 		btnRankBack.setBounds(30, 30, 100, 70);
@@ -663,6 +711,237 @@ public class Main {
 		// events
 		
 		
+		//친구 페이지
+		
+		
+		//친구 페이지가 보여질 때
+		friendPanel.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentShown(ComponentEvent e) {
+				try {
+					//1. 친구 목록을 가져옴
+					ArrayList<FriendsDTO> list = friendsDAO.getFriends(memberDTO.getMemberId());
+					if(list != null) { //친구 목록이 있을때 수행
+						//2. 친구 목록 테이블에 들어갈 수 있도록 정제
+						String friends[][] = new String[list.size()][4];
+						int cnt = 0;
+						for(FriendsDTO i : list) {
+							if(memberDTO.getMemberId().equals(i.getMember1Id())) { // 내가 member1이면
+								friends[cnt][0] = i.getMember2Id(); // member2의 id 넣음
+							}else {
+								friends[cnt][0] = i.getMember1Id(); //아니면 member1의 아이디 넣음
+							}
+							int state = memberDAO.getState(friends[cnt][0]);
+							String temp = "";
+							if(0 == state) { //현재 상태에 맞춰 메시지 입력
+								temp = "로그아웃";
+							}else if(1 == state) {
+								temp = "로그인";
+							}else if(2 == state) {
+								temp = "대기실";
+							}else {
+								temp = "게임중";
+							}
+							friends[cnt][1] = temp;
+							cnt++;
+						}
+						
+						//3. 친구 목록 테이블에 삽입
+						dtmFriends = (DefaultTableModel)tblFriends.getModel();
+						dtmFriends.setNumRows(0);
+						dtmFriends = new DefaultTableModel(friends, friendHeader){ //수정 불가능한 테이블로
+							public boolean isCellEditable(int rowIndex, int mCollIndex) {
+								return false;
+							}
+						};
+						tblFriends.setModel(dtmFriends);
+					} else { //친구 목록이 없을 때 수행
+						//친구 목록 테이블 초기화
+						dtmFriends = (DefaultTableModel)tblFriends.getModel();
+						dtmFriends.setNumRows(0);
+						dtmFriends = new DefaultTableModel(friendContent, friendHeader){ //수정 불가능한 테이블로
+							public boolean isCellEditable(int rowIndex, int mCollIndex) {
+								return false;
+							}
+						};
+					}
+					
+					
+					//1. 친구 요청 목록을 가져옴
+					ArrayList<ReqDTO> list2 = reqDAO.getReqs(memberDTO.getMemberId());
+					if(list2 != null) { //요청 목록이 있을때 수행
+						//2. 정제
+						String reqs[][] = new String[list2.size()][1];
+						int cnt = 0;
+						for(ReqDTO i : list2) {
+							reqs[cnt][0] = i.getMember2Id(); //요청 보낸 사람의 아이디 저장
+							cnt++;
+						}
+						
+						//3. 요청 목록 테이블에 삽입
+						dtmInvite = (DefaultTableModel)tblInvite.getModel();
+						dtmInvite.setNumRows(0);
+						dtmInvite = new DefaultTableModel(reqs, inviteHeader){ //수정 불가능한 테이블로
+							public boolean isCellEditable(int rowIndex, int mCollIndex) {
+								return false;
+							}
+						};
+						tblInvite.setModel(dtmInvite);
+					}else { //요청목록 없으면
+						//테이블 초기화
+						dtmInvite = (DefaultTableModel)tblInvite.getModel();
+						dtmInvite.setNumRows(0);
+						dtmInvite = new DefaultTableModel(inviteContent, inviteHeader){ //수정 불가능한 테이블로
+							public boolean isCellEditable(int rowIndex, int mCollIndex) {
+								return false;
+							}
+						};
+						tblInvite.setModel(dtmInvite);
+					}
+					
+				} catch (Exception e2) {
+					// TODO: handle exception
+					e2.printStackTrace();
+				}
+			}
+		});
+		
+		//친구 추가 버튼 눌렀을 때
+		btnFriendAdd.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try {
+					//졍규화 검사
+					//시작은 영문으로만, 영문과 숫자만, 5-12자
+					Pattern pattern = Pattern.compile("^[a-zA-Z]{1}[a-zA-Z0-9]{4,11}$");
+					String str = txtFriendId.getText();
+					Matcher matcher = pattern.matcher(str);
+					
+					if(matcher.matches()) {//정규화 검사 통과 시
+						//1.친구요청 시도
+						if(friendsDAO.reqFriends(str, memberDTO.getMemberId())) {
+							//성공 알림 띄우기
+							JOptionPane.showMessageDialog(null, "요청 완료");
+							txtFriendId.setText(""); //초기화
+						}else {
+							//실패 알림 띄우기(없는 회원이거나 이미 친구인 회원입니다.)
+							JOptionPane.showMessageDialog(null, "없는 회원이거나 이미 친구인 회원입니다.");
+						}
+					}else {
+						JOptionPane.showMessageDialog(null, "아이디는 5-12자의 영문과 숫자로 이루어집니다.");
+					}
+					
+					
+				} catch (Exception e2) {
+					// TODO: handle exception
+					e2.printStackTrace();
+				}
+			}
+		});
+		
+		//요청 수락 버튼 눌렀을 때
+		btnFriendSure.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try {
+					//1. 선택된 회원의 아이디 가져오기
+					int col = tblInvite.getSelectedColumn();
+					int row = 0;
+					String member2Id = String.valueOf(tblInvite.getValueAt(row, col));
+					
+					//2. 요청 수락 수행
+					if(friendsDAO.sureFriendsReq(memberDTO.getMemberId(), member2Id)) {//성공 시
+						//친구 테이블과 친구요청 테이블 갱신
+						//1. 친구 목록을 가져옴
+						ArrayList<FriendsDTO> list = friendsDAO.getFriends(memberDTO.getMemberId());
+						if(list != null) { //친구 목록이 있을때 수행
+							//2. 친구 목록 테이블에 들어갈 수 있도록 정제
+							String friends[][] = new String[list.size()][4];
+							int cnt = 0;
+							for(FriendsDTO i : list) {
+								if(memberDTO.getMemberId().equals(i.getMember1Id())) { // 내가 member1이면
+									friends[cnt][0] = i.getMember2Id(); // member2의 id 넣음
+								}else {
+									friends[cnt][0] = i.getMember1Id(); //아니면 member1의 아이디 넣음
+								}
+								int state = memberDAO.getState(friends[cnt][0]);
+								String temp = "";
+								if(0 == state) { //현재 상태에 맞춰 메시지 입력
+									temp = "로그아웃";
+								}else if(1 == state) {
+									temp = "로그인";
+								}else if(2 == state) {
+									temp = "대기실";
+								}else {
+									temp = "게임중";
+								}
+								friends[cnt][1] = temp;
+								cnt++;
+							}
+							
+							//3. 친구 목록 테이블에 삽입
+							dtmFriends = (DefaultTableModel)tblFriends.getModel();
+							dtmFriends.setNumRows(0);
+							dtmFriends = new DefaultTableModel(friends, friendHeader){ //수정 불가능한 테이블로
+								public boolean isCellEditable(int rowIndex, int mCollIndex) {
+									return false;
+								}
+							};
+							tblFriends.setModel(dtmFriends);
+						} else { //친구 목록이 없을 때 수행
+							//친구 목록 테이블 초기화
+							dtmFriends = (DefaultTableModel)tblFriends.getModel();
+							dtmFriends.setNumRows(0);
+							dtmFriends = new DefaultTableModel(friendContent, friendHeader){ //수정 불가능한 테이블로
+								public boolean isCellEditable(int rowIndex, int mCollIndex) {
+									return false;
+								}
+							};
+						}
+						
+						
+						//1. 친구 요청 목록을 가져옴
+						ArrayList<ReqDTO> list2 = reqDAO.getReqs(memberDTO.getMemberId());
+						if(list2 != null) { //요청 목록이 있을때 수행
+							//2. 정제
+							String reqs[][] = new String[list2.size()][1];
+							int cnt = 0;
+							for(ReqDTO i : list2) {
+								reqs[cnt][0] = i.getMember2Id(); //요청 보낸 사람의 아이디 저장
+								cnt++;
+							}
+							
+							//3. 요청 목록 테이블에 삽입
+							dtmInvite = (DefaultTableModel)tblInvite.getModel();
+							dtmInvite.setNumRows(0);
+							dtmInvite = new DefaultTableModel(reqs, inviteHeader){ //수정 불가능한 테이블로
+								public boolean isCellEditable(int rowIndex, int mCollIndex) {
+									return false;
+								}
+							};
+							tblInvite.setModel(dtmInvite);
+						}else { //요청목록 없으면
+							//테이블 초기화
+							dtmInvite = (DefaultTableModel)tblInvite.getModel();
+							dtmInvite.setNumRows(0);
+							dtmInvite = new DefaultTableModel(inviteContent, inviteHeader){ //수정 불가능한 테이블로
+								public boolean isCellEditable(int rowIndex, int mCollIndex) {
+									return false;
+								}
+							};
+							tblInvite.setModel(dtmInvite);
+						}
+					}else { //실패 시
+						JOptionPane.showMessageDialog(null, "수락 실패");
+					}
+				} catch (Exception e2) {
+					// TODO: handle exception
+					e2.printStackTrace();
+				}
+			}
+		});
+		
+		
 		//랭킹 페이지
 		
 		
@@ -679,21 +958,31 @@ public class Main {
 				String rankers[][] = new String[list.size()][4];
 				int cnt = 0;
 				for(MemberDTO i : list) {
-					rankers[cnt][0] = String.valueOf(cnt); //랭크
+					rankers[cnt][0] = String.valueOf(cnt + 1); //랭크
 					rankers[cnt][1] = i.getNickname(); //닉네임
 					rankers[cnt][2] = String.valueOf(i.getExp() / 100);
 					rankers[cnt][3] = (i.getWin() + "승 " + i.getLose() + "패"); //승패
+					cnt++;
 				}
 				
 				//tblRank에 값 추가
-				dtmRank = (DefaultTableModel)tblMain.getModel();
+				dtmRank = (DefaultTableModel)tblRank.getModel();
 				dtmRank.setNumRows(0);
 				dtmRank = new DefaultTableModel(rankers, rankHeader){ //수정 불가능한 테이블로
 					public boolean isCellEditable(int rowIndex, int mCollIndex) {
 						return false;
 					}
 				};
-				tblMain.setModel(dtmRank);
+				tblRank.setModel(dtmRank);
+			}
+		});
+		
+		//뒤로가기 버튼 눌렀을 때
+		btnRankBack.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				rankPanel.setVisible(false);
+				mainPanel.setVisible(true);
 			}
 		});
 		
@@ -737,6 +1026,61 @@ public class Main {
 							for(String b : a) {
 								rooms[i][j++] = b;
 							}
+							j=0;
+							i++;
+						}
+					}
+					//tblMain에 값 추가
+					dtmMain = (DefaultTableModel)tblMain.getModel();
+					dtmMain.setNumRows(0);
+					dtmMain = new DefaultTableModel(rooms, header){ //수정 불가능한 테이블로
+						public boolean isCellEditable(int rowIndex, int mCollIndex) {
+							return false;
+						}
+					};
+					tblMain.setModel(dtmMain);
+					
+					//일반 회원이면 방 삭제 버튼 비활성화, 관리자 회원이면 활성화
+					if(memberDTO.getType() == 0) {
+						btnMainDel.setVisible(false);
+					}else {
+						btnMainDel.setVisible(true);
+					}
+					
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+			}
+		});
+		
+		
+		
+		//새로고침 버튼을 눌렀을 때
+		btnMainRefresh.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				
+				//tblMain 초기화
+				//현재 대기중인 방 목록 가져와서 출력하기
+				String[][] rooms;
+				try {
+					ArrayList<ArrayList<String>> list = roomDAO.getRooms(0);
+					//list를 2차원 배열로 변환
+					
+					if(list == null) {
+						rooms = new String[0][0];
+					}else {
+						rooms = new String[list.size()][list.get(0).size()];
+						int i = 0;
+						int j = 0;
+						for(ArrayList<String> a : list) {
+							for(String b : a) {
+								rooms[i][j++] = b;
+							}
+							j = 0;
 							i++;
 						}
 					}
@@ -755,7 +1099,6 @@ public class Main {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				
 			}
 		});
 		
@@ -791,6 +1134,7 @@ public class Main {
 				int col = tblMain.getSelectedColumn();
 				int row = 0;
 				String temp = String.valueOf(tblMain.getValueAt(row, col));
+				System.out.println(temp);
 				int roomId = Integer.parseInt(temp);
 				try {
 					//방 입장 수행
@@ -841,6 +1185,30 @@ public class Main {
 		btnMainMatch.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				try {
+					//1. 현재 열려있는 방 목록 가져오기
+					ArrayList<RoomDTO> list = roomDAO.getRoomDTOs(0); //대기중인 방 가져오기
+					if(list.size() > 0) { //입장 가능한 방이 있으면 수행
+						int index = 0;
+						//2. 랜덤으로 방 id 가져오기
+						if(list.size() == 1 ) { //입장 가능한 방이 하나밖에 없을 때는 그냥 그 방 가져오기
+							index = list.get(0).getRoomId();
+						}else { //아닌 경우 랜덤으로 id 가져오기
+							Random rnd = new Random();
+							index = list.get(rnd.nextInt(list.size() - 1)).getRoomId();
+						}
+						//3. 해당하는 방으로 입장 시도
+						roomDTO = roomDAO.getRoom(index); //roomDTO 초기화
+						//페이지 이동
+						mainPanel.setVisible(false);
+						roomPanel.setVisible(true);
+					}else { //입장 가능한 방이 없으면
+						JOptionPane.showMessageDialog(null, "입장 가능한 방이 없어요");
+					}
+				} catch (Exception e2) {
+					// TODO: handle exception
+					e2.printStackTrace();
+				}
 			}
 		});
 		
@@ -921,13 +1289,16 @@ public class Main {
 				try {
 					if(roomDAO.joinMyRoom(memberDTO.getMemberId(), roomDTO.getRoomId())) {
 						//1. 방장인 경우 방 이름 수정 활성화, 강퇴 버튼 활성화
+						txtRoomName.setText(roomDTO.getName());
 						if(roomDTO.getRoomId() == roomDAO.getMyRoom(memberDTO.getMemberId())) {
 							txtRoomName.setEditable(true);
 							btnRoomKick.setVisible(true);
+							btnRoomReady.setText("시작"); //방장은 시작버튼
 						}else {
 							//2. 아닌 경우 비활성화
 							txtRoomName.setEditable(false);
 							btnRoomKick.setVisible(false);
+							btnRoomReady.setText("준비"); //일반회원은 준비버튼
 						}
 						//들어와 있는 사람들 가져오기
 						ArrayList<ArrayList<String>> list = roomDAO.getMembers(roomDTO.getRoomId());
@@ -942,6 +1313,7 @@ public class Main {
 								for(String b : a) {
 									members[i][j++] = b;
 								}
+								j = 0;
 								i++;
 							}
 						}else {
@@ -956,7 +1328,7 @@ public class Main {
 								return false;
 							}
 						};
-						tblMain.setModel(dtmMain);
+						tblRoom.setModel(dtmRoom);
 					}
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
@@ -965,12 +1337,90 @@ public class Main {
 			}
 		});
 		
-		//새로고침 버튼을 눌렀을 때
-		btnMainRefresh.addMouseListener(new MouseAdapter() {
+		//준비버튼
+		btnRoomReady.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
 				try {
+					//방장인 경우
+					if(roomDTO.getRoomId() == roomDAO.getMyRoom(memberDTO.getMemberId())){
+						//1. 방 인원들이 모두 준비 상태인지 체크 후 모두 게임중으로 변경하는 코드 수행
+						//2. 게임 시작
+						//3. 채팅창 시작
+					}else {
+						//일반 회원인 경우 준비상태를 변경하는 코드 수행
+						if(roomDAO.setReady(memberDTO.getMemberId(), roomDTO.getRoomId())) {
+							//수행 성공 시
+							//1. 페이지 회원 목록 새로고침
+							//들어와 있는 사람들 가져오기
+							ArrayList<ArrayList<String>> list = roomDAO.getMembers(roomDTO.getRoomId());
+							String members[][];
+							
+							//2차원 배열로 변환
+							if(list != null) {
+								members = new String[list.size()][list.get(0).size()];
+								int i = 0;
+								int j = 0;
+								for(ArrayList<String> a : list) {
+									for(String b : a) {
+										members[i][j++] = b;
+									}
+									j = 0;
+									i++;
+								}
+							}else {
+								members = new String[0][0];
+							}
+							
+							//tblRoom에 값 추가
+							dtmRoom = (DefaultTableModel)tblRoom.getModel();
+							dtmRoom.setNumRows(0);
+							dtmRoom = new DefaultTableModel(members, roomHeader){ //수정 불가능한 테이블로
+								public boolean isCellEditable(int rowIndex, int mCollIndex) {
+									return false;
+								}
+							};
+							tblRoom.setModel(dtmRoom);
+							//2. 알림창 띄우기
+							JOptionPane.showMessageDialog(null, "준비상태 변경");
+						}else {
+							//실패한 경우
+							JOptionPane.showMessageDialog(null, "준비상태 변경 실패");
+						}
+					}
+				} catch (Exception e2) {
+					// TODO: handle exception
+				}
+			}
+		});
+		
+		//이름 변경 버튼을 눌렀을 때
+		btnRoomName.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try {
+					String name = txtRoomName.getText();
+					//방 이름 수정 수행
+					if(roomDAO.updateRoomName(roomDTO.getRoomId(), name)) {
+						//방이름 갱신
+						txtRoomName.setText(roomDAO.getRoomName(roomDTO.getRoomId()));
+						//성공 알림창 띄워주기
+						JOptionPane.showMessageDialog(null, "변경 성공");
+					}else {
+						JOptionPane.showMessageDialog(null, "변경 실패");
+					}
+				} catch (Exception e2) {
+					// TODO: handle exception
+				}
+			}
+		});
+		
+		//새로고침 버튼을 눌렀을 때
+		btnRoomRefresh.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try {
+					//1. 페이지 회원 목록 새로고침
 					//들어와 있는 사람들 가져오기
 					ArrayList<ArrayList<String>> list = roomDAO.getMembers(roomDTO.getRoomId());
 					String members[][];
@@ -984,6 +1434,7 @@ public class Main {
 							for(String b : a) {
 								members[i][j++] = b;
 							}
+							j = 0;
 							i++;
 						}
 					}else {
@@ -998,7 +1449,11 @@ public class Main {
 							return false;
 						}
 					};
-					tblMain.setModel(dtmMain);
+					tblRoom.setModel(dtmRoom);
+					
+					//방 이름 초기화
+					String name = roomDAO.getRoomName(roomDTO.getRoomId());
+					txtRoomName.setText(name); //초기화
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -1105,11 +1560,11 @@ public class Main {
 				// 비밀번호 같은지 체크
 				if (txtJoinPwChk.getText().equals(txtJoinPw.getText())) {
 					MemberDTO mDTO = new MemberDTO(); // MemberDTO 객체 생성 및 초기화
-					memberDTO.setMemberId(txtJoinId.getText());
-					memberDTO.setMemberPw(txtJoinPw.getText());
-					memberDTO.setNickname(txtJoinNick.getText());
-					memberDTO.setAnswer(txtJoinA.getText());
-					memberDTO.setQuestion(txtJoinQ.getText());
+					mDTO.setMemberId(txtJoinId.getText());
+					mDTO.setMemberPw(txtJoinPw.getText());
+					mDTO.setNickname(txtJoinNick.getText());
+					mDTO.setAnswer(txtJoinA.getText());
+					mDTO.setQuestion(txtJoinQ.getText());
 					try {
 						if (memberDAO.join(mDTO)) {
 							txtJoinId.setEnabled(true);// 아이디 텍스트필드 활성화

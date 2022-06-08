@@ -2,12 +2,12 @@ package com.jokergame.friends;
 
 import java.sql.Date;
 
-public class FriendsDTO {
+public class ReqDTO { //친구 요청 정보 DTO
 	private int id;
-	private String member1Id;
-	private String member2Id;
+	private String member1Id; //요청 받는사람 id
+	private String member2Id; //요청 보내는사람 id
+	private int status; //0: 수락대기중 1: 수락 2:거절
 	private Date date;
-	private int state;
 	
 	//getters and setters
 	
@@ -30,19 +30,20 @@ public class FriendsDTO {
 	public void setMember2Id(String member2Id) {
 		this.member2Id = member2Id;
 	}
-	
+	public int getStatus() {
+		return status;
+	}
+	public void setStatus(int status) {
+		this.status = status;
+	}
 	public Date getDate() {
 		return date;
 	}
 	public void setDate(Date date) {
 		this.date = date;
 	}
-	public int getState() {
-		return state;
-	}
-	public void setState(int state) {
-		this.state = state;
-	}
+	
+	
 	
 	
 }
